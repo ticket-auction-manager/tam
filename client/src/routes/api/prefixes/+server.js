@@ -8,12 +8,16 @@ export const GET = async () => {
   const s = getSettings();
   if (s.remote_server) {
     const connStr = getPath(s);
-    const res = await fetch(`${connStr}/api/prefixes`, {
-      headers: { 'TAM-KEY': s.remote_key }
-    });
-    if (!res.ok) throw error(res.status);
-    const data = await res.json();
-    return json(data);
+    try {
+      const res = await fetch(`${connStr}/api/prefixes`, {
+        headers: { 'TAM-KEY': s.remote_key }
+      });
+      if (!res.ok) throw error(res.status);
+      const data = await res.json();
+      return json(data);
+    } catch {
+      return json([]);
+    }
   } else {
     const data = await db.select().from(prefixes).orderBy(prefixes.weight, prefixes.prefix);
     return json(data);

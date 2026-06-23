@@ -1,5 +1,5 @@
 <script>
-    import { tS, bS } from '$lib/client/styles.js';
+    import { tS, bS, bAS } from '$lib/client/styles.js';
     import { browser } from '$app/environment';
     import { resolve } from '$app/paths';
     import hotkeys from 'hotkeys-js';
@@ -7,6 +7,12 @@
     const pageTitle = 'Main Menu | TAM'
     const { data } = $props();
     let adminMode = $state(false);
+    let prefixes = $derived(data.prefixes);
+    let curPrefix = $state("");
+    let pColor = $derived.by(() => {
+      if (curPrefix) return prefixes.find(p => curPrefix == p.prefix).color
+        else return "gray";
+    })
 
     const status = $derived.by(() => {
       if (data.whoami === 'TAM Server') {
@@ -43,8 +49,29 @@
 <h1 class="text-xl font-bold">{pageTitle}</h1>
 <p class="text-lg italic">{data.venueName}</p>
 
+<div class="flex flex-col md:flex-row md:flex-wrap gap-1 py-1">
+    <div id="prefixes" class="flex flex-col gap-1 p-2 border border-black rounded">
+        <h2 class="text-lg font-bold">Prefix Selection:</h2>
+        {#each prefixes as prefix (prefix.prefix)}
+        <button class={curPrefix == prefix.prefix ? bAS[prefix.color] : bS[prefix.color]} onclick={() => curPrefix = prefix.prefix}>{prefix.prefix}</button>
+        {/each}
+    </div>
+    {#if curPrefix}
+    <div class="flex flex-col gap-1 items-center border border-black rounded">
+        <h2 class="text-lg font-bold">Forms:</h2>
+        <div class="grid grid-cols-2 gap-1 p-1 min-w-2xs">
+            <a href={resolve('/tickets/[prefix]', {prefix: curPrefix})} class="{bS[pColor]}">Tickets</a>
+        </div>
+    </div>
+    {:else}
+    <div class="flex flex-col gap-1 items-center justify-center p-2 border border-black rounded">
+        <h2 class="text-lg font-bold">Please select a prefix to continue.</h2>
+    </div>
+    {/if}
+</div>
+
 {#if adminMode}
-<div id="admin_mode">
+<div id="admin_mode" class="py-1">
     <h2 class="text-lg font-bold">Admin Mode:</h2>
     <div class="flex flex-row gap-1">
         <a href={resolve('/settings')} class={bS.gray}>Settings</a>
@@ -60,5 +87,8 @@
     {#if data.healthy !== undefined}
     <div>Server Healthy: <span class={tS[status.healthy]}>{data.healthy ? 'Yes' : 'No'}</span></div>
     {/if}
+    <div class="text-center text-xs">
+        <p>&copy; 2026 Ticket Auction Manager</p>
+    </div>
 </div>
 </div>

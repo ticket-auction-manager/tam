@@ -23,6 +23,7 @@
 <HeaderBar>
 	<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
 	<div>Other Settings:</div>
+	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
 </HeaderBar>
 
 <div id="app_container" class="p-1">
