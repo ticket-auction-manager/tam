@@ -1,29 +1,34 @@
 export const tS = {
-  green: 'text-green-800 font-bold',
-  yellow: 'text-yellow-800 font-bold',
-  red: 'text-red-800 font-bold'
-}
+	green: 'text-green-800 font-bold',
+	yellow: 'text-yellow-800 font-bold',
+	red: 'text-red-800 font-bold'
+};
 
 export const bS = {
-  gray: 'px-2 py-1 bg-gray-300 border border-gray-800 rounded hover:bg-gray-400 cursor-pointer',
-  white: 'px-2 py-1 bg-white border border-gray-700 rounded hover:bg-gray-200 cursor-pointer',
-  blue: 'px-2 py-1 bg-blue-300 border border-gray-700 rounded hover:bg-blue-400 cursor-pointer',
-  yellow: 'px-2 py-1 bg-yellow-300 border border-gray-700 rounded hover:bg-yellow-400 cursor-pointer',
-  green: 'px-2 py-1 bg-green-300 border border-gray-700 rounded hover:bg-green-400 cursor-pointer',
-  orange: 'px-2 py-1 bg-orange-300 border border-gray-700 rounded hover:bg-orange-400 cursor-pointer',
-  red: 'px-2 py-1 bg-red-300 border border-gray-700 rounded hover:bg-red-400 cursor-pointer'
-}
+	gray: 'px-2 py-1 bg-gray-300 border border-gray-800 rounded hover:bg-gray-400 cursor-pointer',
+	white: 'px-2 py-1 bg-white border border-gray-700 rounded hover:bg-gray-200 cursor-pointer',
+	blue: 'px-2 py-1 bg-blue-300 border border-gray-700 rounded hover:bg-blue-400 cursor-pointer',
+	yellow:
+		'px-2 py-1 bg-yellow-300 border border-gray-700 rounded hover:bg-yellow-400 cursor-pointer',
+	green: 'px-2 py-1 bg-green-300 border border-gray-700 rounded hover:bg-green-400 cursor-pointer',
+	orange:
+		'px-2 py-1 bg-orange-300 border border-gray-700 rounded hover:bg-orange-400 cursor-pointer',
+	red: 'px-2 py-1 bg-red-300 border border-gray-700 rounded hover:bg-red-400 cursor-pointer'
+};
 
 export const bAS = {
-  gray: 'px-2 py-1 bg-gray-300 border-4 border-gray-800 rounded hover:bg-gray-400 cursor-pointer',
-  white: 'px-2 py-1 bg-white border-4 border-gray-700 rounded hover:bg-gray-200 cursor-pointer',
-  blue: 'px-2 py-1 bg-blue-300 border-4 border-gray-700 rounded hover:bg-blue-400 cursor-pointer',
-  yellow: 'px-2 py-1 bg-yellow-300 border-4 border-gray-700 rounded hover:bg-yellow-400 cursor-pointer',
-  green: 'px-2 py-1 bg-green-300 border-4 border-gray-700 rounded hover:bg-green-400 cursor-pointer',
-  orange: 'px-2 py-1 bg-orange-300 border-4 border-gray-700 rounded hover:bg-orange-400 cursor-pointer',
-  red: 'px-2 py-1 bg-red-300 border-4 border-gray-700 rounded hover:bg-red-400 cursor-pointer'
-}
+	gray: 'px-2 py-1 bg-gray-300 border-4 border-gray-800 rounded hover:bg-gray-400 cursor-pointer',
+	white: 'px-2 py-1 bg-white border-4 border-gray-700 rounded hover:bg-gray-200 cursor-pointer',
+	blue: 'px-2 py-1 bg-blue-300 border-4 border-gray-700 rounded hover:bg-blue-400 cursor-pointer',
+	yellow:
+		'px-2 py-1 bg-yellow-300 border-4 border-gray-700 rounded hover:bg-yellow-400 cursor-pointer',
+	green:
+		'px-2 py-1 bg-green-300 border-4 border-gray-700 rounded hover:bg-green-400 cursor-pointer',
+	orange:
+		'px-2 py-1 bg-orange-300 border-4 border-gray-700 rounded hover:bg-orange-400 cursor-pointer',
+	red: 'px-2 py-1 bg-red-300 border-4 border-gray-700 rounded hover:bg-red-400 cursor-pointer'
+};
 
 export const iS = {
-  normal: 'p-1 border border-black'
-}
+	normal: 'p-1 border border-black'
+};

@@ -1,43 +1,39 @@
 import { db } from '$lib/server/db/index.js';
-import { tickets } from '$lib/server/db/schema.js';
+import { baskets } from '$lib/server/db/schema.js';
 import { getPath, getSettings } from '$lib/server/settings';
 import { error, json } from '@sveltejs/kit';
 import { and, between, eq } from 'drizzle-orm';
 
 export const GET = async ({ params }) => {
 	const s = getSettings();
-	const { prefix } = params,
-		[id_from, id_to] = [parseInt(params.id_from), parseInt(params.id_to)];
+	const [prefix, id_from, id_to] = [
+		params.prefix,
+		parseInt(params.id_from),
+		parseInt(params.id_to)
+	];
 	const rtnData = {};
 	for (let i = id_from; i <= id_to; i++) {
-		rtnData[i] = {
-			prefix,
-			t_id: i,
-			first_name: '',
-			last_name: '',
-			phone_number: '',
-			pref: s.default_pref
-		};
+		rtnData[i] = { prefix, b_id: i, description: '', donors: '', winning_ticket: 0 };
 	}
 	if (s.remote_server) {
 		const connStr = getPath(s);
 		try {
-			const res = await fetch(`${connStr}/api/tickets/${prefix}/${id_from}/${id_to}`, {
+			const res = await fetch(`${connStr}/api/baskets/${prefix}/${id_from}/${id_to}`, {
 				headers: { 'TAM-KEY': s.remote_key }
 			});
 			if (!res.ok) throw error(res.status);
 			const data = Array.from(await res.json());
-			data.forEach((t) => (rtnData[t.t_id] = t));
+			data.forEach((b) => (rtnData[b.b_id] = b));
 		} catch {
 			return json([]);
 		}
 	} else {
 		const data = await db
 			.select()
-			.from(tickets)
-			.where(and(eq(tickets.prefix, prefix), between(tickets.t_id, id_from, id_to)))
-			.orderBy(tickets.prefix, tickets.t_id);
-		data.forEach((t) => (rtnData[t.t_id] = t));
+			.from(baskets)
+			.where(and(eq(baskets.prefix, prefix), between(baskets.b_id, id_from, id_to)))
+			.orderBy(baskets.prefix, baskets.b_id);
+		data.forEach((b) => (rtnData[b.b_id] = b));
 	}
 	return json(Object.values(rtnData));
 };

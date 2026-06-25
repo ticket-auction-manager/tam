@@ -91,10 +91,10 @@
 											headers: { 'TAM-PWD': auth.pwd }
 										});
 										if (res.ok) {
-										  setTimeout(() => {
-    										  const newKeys = authKeys.filter(i => i.auth_key !== key.auth_key);
-    										  authKeys = [...newKeys];
-											}, 1)
+											setTimeout(() => {
+												const newKeys = authKeys.filter((i) => i.auth_key !== key.auth_key);
+												authKeys = [...newKeys];
+											}, 1);
 										}
 									}}>Delete</button
 								>
@@ -109,17 +109,17 @@
 						<button
 							class={bS.gray}
 							onclick={async () => {
-   							    if (newDesc) {
-    								const res = await fetch('/api/auth', {
-     									method: 'POST',
-     									headers: { 'TAM-PWD': auth.pwd, 'Content-Type': 'application/json' },
-     									body: JSON.stringify({ description: newDesc })
-    								});
-    								if (res.ok) {
-     									newDesc = '';
-     									const data = await res.json();
-     									authKeys = [...authKeys, data];
-    								}
+								if (newDesc) {
+									const res = await fetch('/api/auth', {
+										method: 'POST',
+										headers: { 'TAM-PWD': auth.pwd, 'Content-Type': 'application/json' },
+										body: JSON.stringify({ description: newDesc })
+									});
+									if (res.ok) {
+										newDesc = '';
+										const data = await res.json();
+										authKeys = [...authKeys, data];
+									}
 								}
 							}}>New Key</button
 						>

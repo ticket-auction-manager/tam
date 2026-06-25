@@ -19,6 +19,8 @@ def init_db():
     cur.execute("CREATE TABLE IF NOT EXISTS prefixes (prefix TEXT PRIMARY KEY, color TEXT, weight INTEGER)")
     cur.execute("""CREATE TABLE IF NOT EXISTS tickets (prefix TEXT, t_id INTEGER, first_name TEXT, last_name TEXT,
         phone_number TEXT, pref TEXT, PRIMARY KEY (prefix, t_id))""")
+    cur.execute("""CREATE TABLE IF NOT EXISTS baskets (prefix TEXT, b_id INTEGER, description TEXT, donors TEXT,
+        winning_ticket INTEGER, PRIMARY KEY (prefix, b_id))""")
     conn.commit()
     conn.close()
 

@@ -10,7 +10,7 @@
 	let { data } = $props();
 	let { prefix, prefixes } = $derived(data);
 
-	let pageTitle = $derived(`${prefix.prefix} Tickets | TAM`);
+	let pageTitle = $derived(`${prefix.prefix} Baskets | TAM`);
 
 	let curIdx = $state(0),
 		nextIdx = $derived(curIdx + 1),
@@ -39,7 +39,7 @@
 			if (pager.idTo - pager.idFrom > 300) {
 				pager.idTo = pager.idFrom + 300;
 			}
-			const res = await fetch(`/api/tickets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
+			const res = await fetch(`/api/baskets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
 			const resData = await res.json();
 			resData.map((i) => (i.changed = false));
 			items = [...resData];
@@ -47,7 +47,7 @@
 		},
 		save: async () => {
 			if (itemsBuffer.length > 0) {
-				const res = await fetch('/api/tickets', {
+				const res = await fetch('/api/baskets', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(itemsBuffer)
@@ -128,7 +128,7 @@
 			focusIdx(curIdx);
 		}
 	};
-	const headers = ['Ticket ID', 'First Name', 'Last Name', 'Phone Number', 'Pref', 'Save?'];
+	const headers = ['Basket ID', 'Description', 'Donors', 'Save?'];
 
 	beforeNavigate(({ cancel }) => {
 		if (itemsBuffer.length > 0) {
@@ -159,10 +159,10 @@
 		<tr>
 			<td colspan="50">
 				<HeaderBar>
-					<div>Tickets:</div>
+					<div>Baskets:</div>
 					{#each prefixes as p (p.prefix)}
 						<a
-							href={resolve('/tickets/[prefix]', { prefix: p.prefix })}
+							href={resolve('/baskets/[prefix]', { prefix: p.prefix })}
 							class={prefix.prefix == p.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
 						>
 					{/each}
@@ -179,7 +179,7 @@
 		</tr>
 	</thead>
 	<tbody>
-		{#each items as item, idx (item.t_id)}
+		{#each items as item, idx (item.b_id)}
 			<tr
 				class="focus-within:font-bold"
 				onfocusin={(e) => {
@@ -187,14 +187,14 @@
 					e.target.scrollIntoView({ block: 'center' });
 				}}
 			>
-				<td class="p-0.5 border">{item.t_id}</td>
+				<td class="p-0.5 border">{item.b_id}</td>
 				<td class="p-0.5 border"
 					><input
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_first"
 						onchangecapture={() => (item.changed = true)}
-						bind:value={item.first_name}
+						bind:value={item.description}
 					/></td
 				>
 				<td class="p-0.5 border"
@@ -203,35 +203,8 @@
 						class="{iS.normal} w-full"
 						id="{idx}_second"
 						onchangecapture={() => (item.changed = true)}
-						bind:value={item.last_name}
+						bind:value={item.donors}
 					/></td
-				>
-				<td class="p-0.5 border"
-					><input
-						type="text"
-						class="{iS.normal} w-full"
-						id="{idx}_third"
-						onchangecapture={() => (item.changed = true)}
-						bind:value={item.phone_number}
-					/></td
-				>
-				<td class="p-0.5 border"
-					><button
-						class={bS[prefix.color]}
-						onclick={() => {
-							item.pref == 'CALL' ? (item.pref = 'TEXT') : (item.pref = 'CALL');
-							item.changed = true;
-						}}
-						onkeydown={(e) => {
-							if (e.key == 't') {
-								if (item.pref != 'TEXT') item.changed = true;
-								item.pref = 'TEXT';
-							} else if (e.key == 'c') {
-								if (item.pref != 'CALL') item.changed = true;
-								item.pref = 'CALL';
-							}
-						}}>{item.pref}</button
-					></td
 				>
 				<td class="p-0.5 border"
 					><button

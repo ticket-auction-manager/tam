@@ -1,6 +1,6 @@
-import { getSettings } from "$lib/server/settings";
+import { getSettings } from '$lib/server/settings';
 
 export const load = () => {
-  const settings = getSettings();
-  return { settings };
-}
+	const settings = getSettings();
+	return { settings };
+};

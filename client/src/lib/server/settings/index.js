@@ -5,7 +5,7 @@ const defaultSettings = {
 	remote_server: '',
 	remote_key: '',
 	remote_port: '8000',
-  remote_tls: false,
+	remote_tls: false,
 	default_pref: 'CALL',
 	venue_name: 'TAM'
 };
@@ -15,8 +15,8 @@ export const getSettings = () => {
 	try {
 		const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
 		return settings;
-  } catch {
-    mkdirSync(env.TAM_DATA_DIR || './data', {recursive: true})
+	} catch {
+		mkdirSync(env.TAM_DATA_DIR || './data', { recursive: true });
 		writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2), 'utf-8');
 		return defaultSettings;
 	}
