@@ -21,6 +21,10 @@ def init_db():
         phone_number TEXT, pref TEXT, PRIMARY KEY (prefix, t_id))""")
     cur.execute("""CREATE TABLE IF NOT EXISTS baskets (prefix TEXT, b_id INTEGER, description TEXT, donors TEXT,
         winning_ticket INTEGER, PRIMARY KEY (prefix, b_id))""")
+    cur.execute("""CREATE VIEW IF NOT EXISTS drawing AS
+        SELECT b.prefix, b.b_id, b.description, b.winning_ticket, t.last_name, t.first_name, t.phone_number
+        FROM baskets b LEFT JOIN tickets t ON b.prefix = t.prefix AND b.winning_ticket = t.t_id
+        ORDER BY b.prefix, b.b_id""")
     conn.commit()
     conn.close()
 

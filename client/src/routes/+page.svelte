@@ -64,13 +64,14 @@
 		{#if curPrefix}
 			<div class="flex flex-col gap-1 items-center border border-black rounded">
 				<h2 class="text-lg font-bold">Forms:</h2>
-				<div class="grid grid-cols-2 gap-1 p-1 min-w-2xs">
+				<div class="grid grid-cols-2 gap-1 p-1 min-w-2xs text-center">
 					<a href={resolve('/tickets/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
 						>Tickets</a
 					>
 					<a href={resolve('/baskets/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
 						>Baskets</a
 					>
+					<a href={resolve('/drawing/[prefix]', {prefix: curPrefix})} class="{bS[pColor]} col-span-2">Drawing Form</a>
 				</div>
 			</div>
 		{:else}

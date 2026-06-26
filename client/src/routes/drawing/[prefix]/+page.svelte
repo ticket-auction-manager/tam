@@ -10,7 +10,7 @@
 	let { data } = $props();
 	let { prefix, prefixes } = $derived(data);
 
-	let pageTitle = $derived(`${prefix.prefix} Baskets | TAM`);
+	let pageTitle = $derived(`${prefix.prefix} Drawing Form | TAM`);
 
 	let curIdx = $state(0),
 		nextIdx = $derived(curIdx + 1),
@@ -39,7 +39,7 @@
 			if (pager.idTo - pager.idFrom > 300) {
 				pager.idTo = pager.idFrom + 300;
 			}
-			const res = await fetch(`/api/baskets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
+			const res = await fetch(`/api/drawing/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
 			const resData = await res.json();
 			resData.map((i) => (i.changed = false));
 			items = [...resData];
@@ -47,7 +47,7 @@
 		},
 		save: async () => {
 			if (itemsBuffer.length > 0) {
-				const res = await fetch('/api/baskets', {
+				const res = await fetch('/api/drawing', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(itemsBuffer)
@@ -115,20 +115,20 @@
 		copy: () => {
 			if (items[curIdx]) {
 				const buffer = { ...items[curIdx] };
-				['prefix', 't_id'].forEach((key) => delete buffer[key]);
-				window.localStorage.setItem('tam-basket', JSON.stringify(buffer));
+				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
+				window.localStorage.setItem('tam-drawing', JSON.stringify(buffer));
 			}
 			focusIdx(curIdx);
 		},
 		paste: () => {
 			if (items[curIdx]) {
-				const buffer = JSON.parse(window.localStorage.getItem('tam-basket'));
+				const buffer = JSON.parse(window.localStorage.getItem('tam-drawing'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };
 			}
 			focusIdx(curIdx);
 		}
 	};
-	const headers = ['Basket ID', 'Description', 'Donors', 'Save?'];
+	const headers = ['Basket ID', 'Description', 'Winning Ticket', 'Winner', 'Save?'];
 
 	beforeNavigate(({ cancel }) => {
 		if (itemsBuffer.length > 0) {
@@ -162,7 +162,7 @@
 					<div>Baskets:</div>
 					{#each prefixes as p (p.prefix)}
 						<a
-							href={resolve('/baskets/[prefix]', { prefix: p.prefix })}
+							href={resolve('/drawing/[prefix]', { prefix: p.prefix })}
 							class={prefix.prefix == p.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
 						>
 					{/each}
@@ -189,23 +189,27 @@
 			>
 				<td class="p-0.5 border">{item.b_id}</td>
 				<td class="p-0.5 border"
-					><input
-						type="text"
-						class="{iS.normal} w-full"
-						id="{idx}_first"
-						onchangecapture={() => (item.changed = true)}
-						bind:value={item.description}
-					/></td
+					>{item.description}</td
 				>
 				<td class="p-0.5 border"
 					><input
-						type="text"
+						type="number"
 						class="{iS.normal} w-full"
-						id="{idx}_second"
-						onchangecapture={() => (item.changed = true)}
-						bind:value={item.donors}
+						id="{idx}_first"
+						onchangecapture={async () => {
+						  item.changed = true;
+						  const res = await fetch(`/api/tickets/${prefix.prefix}/${item.winning_ticket}`);
+						  if (res.ok) {
+							const data = await res.json();
+							[item.last_name, item.first_name, item.phone_number] = [(data.last_name || ""), (data.first_name || ""), (data.phone_number || "")];
+						  }
+						}}
+						bind:value={item.winning_ticket}
 					/></td
 				>
+				<td class="p-0.5 border">
+				    {item.last_name || ""}, {item.first_name || ""}: {item.phone_number || ""}
+				</td>
 				<td class="p-0.5 border"
 					><button
 						class={bS[prefix.color]}

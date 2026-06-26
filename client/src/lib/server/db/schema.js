@@ -1,4 +1,5 @@
-import { integer, sqliteTable, text, primaryKey } from 'drizzle-orm/sqlite-core';
+import { sql } from 'drizzle-orm';
+import { integer, sqliteTable, text, primaryKey, sqliteView } from 'drizzle-orm/sqlite-core';
 
 export const prefixes = sqliteTable('prefixes', {
 	prefix: text('prefix').primaryKey(),
@@ -30,3 +31,15 @@ export const baskets = sqliteTable(
 	},
 	(b) => [primaryKey({ columns: [b.prefix, b.b_id] })]
 );
+
+export const drawing = sqliteView('drawing', {
+  prefix: text('prefix'),
+  b_id: integer('b_id'),
+  description: text('description'),
+  winning_ticket: integer('winning_ticket'),
+  last_name: text('last_name'),
+  first_name: text('first_name'),
+  phone_number: text('phone_number')
+}).as(sql`SELECT b.prefix, b.b_id, b.description, b.winning_ticket, t.last_name, t.first_name, t.phone_number
+  FROM baskets b LEFT JOIN tickets t ON b.prefix = t.prefix AND b.winning_ticket = t.t_id
+  ORDER BY b.prefix, b.b_id`)
