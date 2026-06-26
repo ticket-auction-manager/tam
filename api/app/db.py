@@ -25,6 +25,14 @@ def init_db():
         SELECT b.prefix, b.b_id, b.description, b.winning_ticket, t.last_name, t.first_name, t.phone_number
         FROM baskets b LEFT JOIN tickets t ON b.prefix = t.prefix AND b.winning_ticket = t.t_id
         ORDER BY b.prefix, b.b_id""")
+    cur.execute("""CREATE VIEW IF NOT EXISTS report_by_name AS
+        SELECT t.last_name, t.first_name, t.phone_number, t.pref, b.*
+        FROM baskets b LEFT JOIN tickets t ON b.prefix = t.prefix AND b.winning_ticket = t.t_id
+        ORDER BY t.last_name, t.first_name, t.phone_number, b.prefix, b.b_id""")
+    cur.execute("""CREATE VIEW IF NOT EXISTS report_by_basket AS
+        SELECT b.*, t.last_name, t.first_name, t.phone_number, t.pref
+        FROM baskets b LEFT JOIN tickets t ON b.prefix = t.prefix AND b.winning_ticket = t.t_id
+        ORDER BY b.prefix, b.b_id""")
     conn.commit()
     conn.close()
 
