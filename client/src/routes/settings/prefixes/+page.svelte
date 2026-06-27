@@ -13,6 +13,8 @@
 
 	onMount(() => {
 		prefixes = [...data.prefixes];
+		const form_prefix = document.getElementById('form_prefix');
+		if (form_prefix) form_prefix.select();
 	});
 </script>
 
@@ -20,31 +22,31 @@
 	<title>{pageTitle}</title>
 </svelte:head>
 
-<HeaderBar>
-	<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
-</HeaderBar>
-
 <div id="app_container" class="p-1">
+	<HeaderBar>
+		<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
+	</HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	<div class="flex flex-row gap-1 py-1 items-center">
 		<div class="flex flex-col gap-1">
 			<div>Prefix</div>
-			<input type="text" class={iS.normal} bind:value={editPrefix.prefix} />
+			<input type="text" id="form_prefix" class={iS.normal} bind:value={editPrefix.prefix} />
 		</div>
 		<div class="flex flex-col gap-1">
 			<div>Color</div>
-			<select name="prefix_color" class={iS.normal} bind:value={editPrefix.color}>
+			<select id="form_color" class={iS.normal} bind:value={editPrefix.color}>
 				<option value="white">White</option>
 				<option value="blue">Blue</option>
 				<option value="yellow">Yellow</option>
 				<option value="green">Green</option>
 				<option value="orange">Orange</option>
+				<option value="purple">Purple</option>
 				<option value="red">Red</option>
 			</select>
 		</div>
 		<div class="flex flex-col gap-1">
 			<div>Weight</div>
-			<input type="number" class={iS.normal} bind:value={editPrefix.weight} />
+			<input type="number" id="form_weight" class={iS.normal} bind:value={editPrefix.weight} />
 		</div>
 		<div class="flex flex-col gap-1">
 			<div>Actions</div>
@@ -59,6 +61,9 @@
 						});
 						if (req.ok) window.location.reload();
 					}
+					editPrefix.prefix = '';
+					const form_prefix = document.getElementById('form_prefix');
+					if (form_prefix) form_prefix.select();
 				}}>Add/Change</button
 			>
 		</div>
@@ -86,26 +91,32 @@
 			onclick={() => (editPrefix.color = 'orange')}>Orange</button
 		>
 		<button
+			class={editPrefix.color == 'purple' ? bAS.purple : bS.purple}
+			onclick={() => (editPrefix.color = 'purple')}>Purple</button
+		>
+		<button
 			class={editPrefix.color == 'red' ? bAS.red : bS.red}
 			onclick={() => (editPrefix.color = 'red')}>Red</button
 		>
 	</div>
-	<table class="w-full">
+	<table class="w-full border-separate">
 		<thead class="text-left">
 			<tr>
-				<th>Prefix</th>
-				<th>Color</th>
-				<th>Weight</th>
-				<th>Actions</th>
+				<th class="border p-0.5">Prefix</th>
+				<th class="border p-0.5">Color</th>
+				<th class="border p-0.5">Weight</th>
+				<th class="border p-0.5">Actions</th>
 			</tr>
 		</thead>
 		<tbody>
 			{#each prefixes as prefix (prefix.prefix)}
 				<tr>
-					<td>{prefix.prefix}</td>
-					<td>{prefix.color.charAt(0).toUpperCase() + prefix.color.slice(1)}</td>
-					<td>{prefix.weight}</td>
-					<td>
+					<td class="border p-0.5">{prefix.prefix}</td>
+					<td class="border p-0.5"
+						>{prefix.color.charAt(0).toUpperCase() + prefix.color.slice(1)}</td
+					>
+					<td class="border p-0.5">{prefix.weight}</td>
+					<td class="border p-0.5">
 						<div class="flex flex-row gap-1 items-center">
 							<button class={bS[prefix.color]} onclick={() => (editPrefix = { ...prefix })}
 								>Edit</button
@@ -126,11 +137,3 @@
 		</tbody>
 	</table>
 </div>
-
-<style>
-	table td,
-	table th {
-		border: solid black 1px;
-		padding: 0.25rem;
-	}
-</style>

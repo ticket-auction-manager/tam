@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
-	import { bS, bAS, iS } from '$lib/client/styles';
+	import { bS, bAS, iS, rBS } from '$lib/client/styles';
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
 	import PagerBar from '$lib/client/components/PagerBar.svelte';
 	import CommandBar from '$lib/client/components/CommandBar.svelte';
@@ -28,7 +28,7 @@
 
 	let pager = $state({ idFrom: 0, idTo: 0 });
 	let items = $state([]);
-	let itemsLength = $derived(items.length);
+	let itemsLength = $derived.by(() => (items.length ? items.length : 0));
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
 		getPage: async () => {
@@ -181,7 +181,7 @@
 	<tbody>
 		{#each items as item, idx (item.t_id)}
 			<tr
-				class="focus-within:font-bold"
+				class="focus-within:font-bold {rBS[prefix.color]}"
 				onfocusin={(e) => {
 					changeIdx(idx);
 					e.target.scrollIntoView({ block: 'center' });

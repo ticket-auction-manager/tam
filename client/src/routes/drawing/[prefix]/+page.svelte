@@ -2,7 +2,7 @@
 	import { resolve } from '$app/paths';
 	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
-	import { bS, bAS, iS } from '$lib/client/styles';
+	import { bS, bAS, iS, rBS } from '$lib/client/styles';
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
 	import PagerBar from '$lib/client/components/PagerBar.svelte';
 	import CommandBar from '$lib/client/components/CommandBar.svelte';
@@ -28,7 +28,7 @@
 
 	let pager = $state({ idFrom: 0, idTo: 0 });
 	let items = $state([]);
-	let itemsLength = $derived(items.length);
+	let itemsLength = $derived.by(() => (items.length ? items.length : 0));
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
 		getPage: async () => {
@@ -159,7 +159,7 @@
 		<tr>
 			<td colspan="50">
 				<HeaderBar>
-					<div>Baskets:</div>
+					<div>Drawing Forms:</div>
 					{#each prefixes as p (p.prefix)}
 						<a
 							href={resolve('/drawing/[prefix]', { prefix: p.prefix })}
@@ -181,38 +181,41 @@
 	<tbody>
 		{#each items as item, idx (item.b_id)}
 			<tr
-				class="focus-within:font-bold"
+				class="focus-within:font-bold {rBS[prefix.color]}"
 				onfocusin={(e) => {
 					changeIdx(idx);
 					e.target.scrollIntoView({ block: 'center' });
 				}}
 			>
 				<td class="p-0.5 border">{item.b_id}</td>
-				<td class="p-0.5 border"
-					>{item.description}</td
-				>
+				<td class="p-0.5 border">{item.description}</td>
 				<td class="p-0.5 border"
 					><input
 						type="number"
 						class="{iS.normal} w-full"
 						id="{idx}_first"
 						onchangecapture={async () => {
-						  item.changed = true;
-						  const res = await fetch(`/api/tickets/${prefix.prefix}/${item.winning_ticket}`);
-						  if (res.ok) {
-							const data = await res.json();
-							[item.last_name, item.first_name, item.phone_number] = [(data.last_name || ""), (data.first_name || ""), (data.phone_number || "")];
-						  }
+							item.changed = true;
+							const res = await fetch(`/api/tickets/${prefix.prefix}/${item.winning_ticket}`);
+							if (res.ok) {
+								const data = await res.json();
+								[item.last_name, item.first_name, item.phone_number] = [
+									data.last_name || '',
+									data.first_name || '',
+									data.phone_number || ''
+								];
+							}
 						}}
 						bind:value={item.winning_ticket}
 					/></td
 				>
 				<td class="p-0.5 border">
-				    {item.last_name || ""}, {item.first_name || ""}: {item.phone_number || ""}
+					{item.last_name || ''}, {item.first_name || ''}: {item.phone_number || ''}
 				</td>
 				<td class="p-0.5 border"
 					><button
 						class={bS[prefix.color]}
+						tabindex="-1"
 						onclick={() => {
 							item.changed ? (item.changed = false) : (item.changed = true);
 						}}>{item.changed ? 'Yes' : 'No'}</button

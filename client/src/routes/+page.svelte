@@ -59,6 +59,8 @@
 					class={curPrefix == prefix.prefix ? bAS[prefix.color] : bS[prefix.color]}
 					onclick={() => (curPrefix = prefix.prefix)}>{prefix.prefix}</button
 				>
+			{:else}
+				<div>No Prefixes</div>
 			{/each}
 		</div>
 		{#if curPrefix}
@@ -71,7 +73,21 @@
 					<a href={resolve('/baskets/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
 						>Baskets</a
 					>
-					<a href={resolve('/drawing/[prefix]', {prefix: curPrefix})} class="{bS[pColor]} col-span-2">Drawing Form</a>
+					<a
+						href={resolve('/drawing/[prefix]', { prefix: curPrefix })}
+						class="{bS[pColor]} col-span-2">Drawing Form</a
+					>
+				</div>
+			</div>
+			<div class="flex flex-col gap-1 items-center border border-black rounded">
+				<h2 class="text-lg font-bold">Reports:</h2>
+				<div class="grid grid-cols-2 gap-1 p-1 text-center">
+					<a href={resolve('/reports/byname/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
+						>Winners By Name</a
+					>
+					<a href={resolve('/reports/bybasket/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
+						>Winners By Basket</a
+					>
 				</div>
 			</div>
 		{:else}

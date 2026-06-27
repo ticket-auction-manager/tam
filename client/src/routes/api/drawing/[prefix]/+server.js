@@ -5,20 +5,26 @@ import { error, json } from '@sveltejs/kit';
 import { eq } from 'drizzle-orm';
 
 export const GET = async ({ params }) => {
-  const { prefix } = params;
-  const s = getSettings();
-  if (s.remote_server) {
-    const connStr = getPath(s);
-    try {
-      const res = await fetch(`${connStr}/api/drawing/${prefix}`, {headers: {'TAM-KEY': s.remote_key}});
-      if (!res.ok) throw error(res.status);
-      const data = await res.json();
-      return json(data);
-    } catch {
-      return json([]);
-    }
-  } else {
-    const data = await db.select().from(drawing).where(eq(drawing.prefix, prefix)).orderBy(drawing.prefix, drawing.b_id);
-    return json(data);
-  }
-}
+	const { prefix } = params;
+	const s = getSettings();
+	if (s.remote_server) {
+		const connStr = getPath(s);
+		try {
+			const res = await fetch(`${connStr}/api/drawing/${prefix}`, {
+				headers: { 'TAM-KEY': s.remote_key }
+			});
+			if (!res.ok) throw error(res.status);
+			const data = await res.json();
+			return json(data);
+		} catch {
+			return json([]);
+		}
+	} else {
+		const data = await db
+			.select()
+			.from(drawing)
+			.where(eq(drawing.prefix, prefix))
+			.orderBy(drawing.prefix, drawing.b_id);
+		return json(data);
+	}
+};
