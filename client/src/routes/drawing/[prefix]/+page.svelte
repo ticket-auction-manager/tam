@@ -1,6 +1,5 @@
 <script>
 	import { resolve } from '$app/paths';
-	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { bS, bAS, iS, rBS } from '$lib/client/styles';
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
@@ -82,7 +81,7 @@
 			}
 		},
 		prevLine: () => {
-			if (items[prevIdx]) {
+			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
 				}, 1);
@@ -129,19 +128,6 @@
 		}
 	};
 	const headers = ['Basket ID', 'Description', 'Winning Ticket', 'Winner', 'Save?'];
-
-	beforeNavigate(({ cancel }) => {
-		if (itemsBuffer.length > 0) {
-			if (!confirm('Are you sure you want to leave this page? There are unsaved changes!'))
-				cancel();
-		}
-	});
-
-	afterNavigate(() => {
-		items = [];
-		pager = { idFrom: 0, idTo: 0 };
-		curIdx = 0;
-	});
 
 	if (browser) {
 		window.addEventListener('beforeunload', (e) => {

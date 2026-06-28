@@ -1,6 +1,5 @@
 <script>
 	import { resolve } from '$app/paths';
-	import { afterNavigate, beforeNavigate } from '$app/navigation';
 	import { browser } from '$app/environment';
 	import { bS, bAS, iS, rBS } from '$lib/client/styles';
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
@@ -22,7 +21,7 @@
 		curIdx = idx;
 		const elemIdx = document.getElementById(`${idx}_first`);
 		if (elemIdx) {
-			elemIdx.focus();
+			elemIdx.select();
 		}
 	};
 
@@ -82,7 +81,7 @@
 			}
 		},
 		prevLine: () => {
-			if (items[prevIdx]) {
+			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
 				}, 1);
@@ -118,30 +117,17 @@
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
 				window.localStorage.setItem('tam-ticket', JSON.stringify(buffer));
 			}
-			focusIdx(curIdx);
+			setTimeout(() => focusIdx(curIdx), 1);
 		},
 		paste: () => {
 			if (items[curIdx]) {
 				const buffer = JSON.parse(window.localStorage.getItem('tam-ticket'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };
 			}
-			focusIdx(curIdx);
+			setTimeout(() => focusIdx(curIdx), 1);
 		}
 	};
 	const headers = ['Ticket ID', 'First Name', 'Last Name', 'Phone Number', 'Pref', 'Save?'];
-
-	beforeNavigate(({ cancel }) => {
-		if (itemsBuffer.length > 0) {
-			if (!confirm('Are you sure you want to leave this page? There are unsaved changes!'))
-				cancel();
-		}
-	});
-
-	afterNavigate(() => {
-		items = [];
-		pager = { idFrom: 0, idTo: 0 };
-		curIdx = 0;
-	});
 
 	if (browser) {
 		window.addEventListener('beforeunload', (e) => {
@@ -163,7 +149,8 @@
 					{#each prefixes as p (p.prefix)}
 						<a
 							href={resolve('/tickets/[prefix]', { prefix: p.prefix })}
-							class={prefix.prefix == p.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
+							class={prefix.prefix == p.prefix ? bAS[p.color] : bS[p.color]}
+			                >{p.prefix}</a
 						>
 					{/each}
 				</HeaderBar>
@@ -236,6 +223,7 @@
 				<td class="p-0.5 border"
 					><button
 						class={bS[prefix.color]}
+						tabindex="-1"
 						onclick={() => {
 							item.changed ? (item.changed = false) : (item.changed = true);
 						}}>{item.changed ? 'Yes' : 'No'}</button

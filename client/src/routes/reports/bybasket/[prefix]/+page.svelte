@@ -36,7 +36,8 @@
 					{#each data.prefixes as p (p.prefix)}
 						<a
 							href={resolve('/reports/byname/[prefix]', { prefix: p.prefix })}
-							class={p.prefix == prefix.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
+							class={p.prefix == prefix.prefix ? bAS[p.color] : bS[p.color]}
+							>{p.prefix}</a
 						>
 					{/each}
 				</HeaderBar>
