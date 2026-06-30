@@ -74,3 +74,14 @@ export const reportByBasket = sqliteView('report_by_basket', {
 	.as(sql`SELECT b.prefix, b.b_id, b.description, b.donors, b.winning_ticket, t.last_name, t.first_name, t.phone_number, t.pref
   FROM baskets b LEFT JOIN tickets t on b.prefix = t.prefix AND b.winning_ticket = t.t_id
   ORDER BY b.prefix, b.b_id`);
+
+export const reportCounts = sqliteView('report_counts', {
+  prefix: text('prefix'),
+  unique_buyers: integer('unique_buyers'),
+  total_buys: integer('total_buys')
+}).as(sql`SELECT prefix, COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))) AS unique_buyers, COUNT(*) AS total_buys
+  FROM tickets
+  GROUP BY prefix
+  UNION ALL
+  SELECT 'Total', COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))), COUNT(*)
+  FROM tickets`)

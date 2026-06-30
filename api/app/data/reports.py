@@ -27,6 +27,12 @@ class ReportByBasketLine:
     phone_number: str = ""
     pref: str = ""
 
+@dataclass
+class ReportCountLine:
+    prefix: str = ""
+    unique_buyers: int = 0
+    total_buys: int = 0
+
 class ReportsRepo(RepoTemplate):
     def get_by_name_report(self, prefix: str):
         self.cur.execute("SELECT * FROM report_by_name WHERE prefix = ?", (prefix,))
@@ -36,6 +42,10 @@ class ReportsRepo(RepoTemplate):
         self.cur.execute("SELECT * FROM report_by_basket WHERE prefix = ?", (prefix,))
         results = self.cur.fetchall()
         return [ReportByBasketLine(*r) for r in results]
+    def get_counts_report(self):
+        self.cur.execute("SELECT * FROM report_counts")
+        results = self.cur.fetchall()
+        return [ReportCountLine(*r) for r in results]
 
 reports_router = APIRouter(prefix="/api/reports")
 
@@ -48,3 +58,8 @@ def get_report_by_name(prefix: str, tam_key: str = Header("")):
 def get_report_by_basket(prefix: str, tam_key: str = Header("")):
     AuthRepo().verify_key(tam_key)
     return ReportsRepo().get_by_basket_report(prefix)
+
+@reports_router.get("/counts")
+def get_report_counts(tam_key: str = Header("")):
+    AuthRepo().verify_key(tam_key)
+    return ReportsRepo().get_counts_report()

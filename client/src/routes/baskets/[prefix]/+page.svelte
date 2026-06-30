@@ -201,6 +201,12 @@
 					></td
 				>
 			</tr>
+		{:else}
+            <tr>
+                <td class="p-0.5 border text-center" colspan="50">
+                    No rows loaded. Please use the pager at the top to put in the first, then last number on the sheet, click Go, and that should load in the sheet.
+                </td>
+            </tr>
 		{/each}
 	</tbody>
 </table>

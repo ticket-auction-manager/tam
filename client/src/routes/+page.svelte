@@ -1,4 +1,5 @@
 <script>
+    import favicon from '$lib/assets/favicon.svg'
 	import { tS, bS, bAS } from '$lib/client/styles.js';
 	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
@@ -48,8 +49,15 @@
 </svelte:head>
 
 <div class="p-1" id="app_container">
-	<h1 class="text-xl font-bold">{pageTitle}</h1>
-	<p class="text-lg italic">{data.venueName}</p>
+    <div class="flex flex-row gap-1 items-center">
+        <div>
+            <img src={favicon} alt="TAM Logo" style="height: 4rem">
+        </div>
+        <div>
+           	<h1 class="text-xl font-bold">{pageTitle}</h1>
+           	<p class="text-lg italic">{data.venueName}</p>
+        </div>
+    </div>
 
 	<div class="flex flex-col md:flex-row md:flex-wrap gap-1 py-1">
 		<div id="prefixes" class="flex flex-col gap-1 p-2 border border-black rounded">
@@ -120,6 +128,7 @@
 		{/if}
 		<div class="text-center text-xs">
 			<p>&copy; 2026 Ticket Auction Manager</p>
+			<p>Created by Dilan Gilluly. Support me on <a href="https://ko-fi.com/techguydilan" class="text-blue-500">Ko-Fi</a>.</p>
 		</div>
 	</div>
 </div>
