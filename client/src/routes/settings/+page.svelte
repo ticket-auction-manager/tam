@@ -22,15 +22,14 @@
 	<title>{pageTitle}</title>
 </svelte:head>
 
-<HeaderBar>
-	<div>Settings Sections:</div>
-	{#if data.settings.remote_server}
-		<a href={resolve('/settings/auth-keys')} class={bS.gray}>Auth Keys</a>
-	{/if}
-	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
-</HeaderBar>
-
 <div id="app_container" class="p-1">
+    <HeaderBar>
+    	<div>Settings Sections:</div>
+    	{#if data.settings.remote_server}
+    		<a href={resolve('/settings/auth-keys')} class={bS.gray}>Auth Keys</a>
+    	{/if}
+    	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
+    </HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	<div class="flex flex-col gap-1 w-full py-1">
 		<h2 class="text-lg font-bold">Remote Mode:</h2>
@@ -84,6 +83,7 @@
 						settings = { ...resData };
 						status.message = 'Settings saved successfully!';
 						status.color = 'green';
+						setTimeout(() => window.location.reload(), 3000);
 					}
 				}}>Save</button
 			>

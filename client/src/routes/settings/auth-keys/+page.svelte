@@ -20,13 +20,12 @@
 	<title>{pageTitle}</title>
 </svelte:head>
 
-<HeaderBar>
-	<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
-	<div>Other Settings:</div>
-	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
-</HeaderBar>
-
 <div id="app_container" class="p-1">
+    <HeaderBar>
+    	<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
+    	<div>Other Settings:</div>
+    	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
+    </HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	{#if !auth.toggle}
 		<div class="flex flex-row gap-1 items-center py-1">

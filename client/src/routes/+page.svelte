@@ -72,9 +72,9 @@
 			{/each}
 		</div>
 		{#if curPrefix}
-			<div class="flex flex-col gap-1 items-center border border-black rounded">
+			<div class="flex flex-col gap-1 items-center p-1 border border-black rounded">
 				<h2 class="text-lg font-bold">Forms:</h2>
-				<div class="grid grid-cols-2 gap-1 p-1 min-w-2xs text-center">
+				<div class="grid grid-cols-2 gap-1 p-1 text-center">
 					<a href={resolve('/tickets/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
 						>Tickets</a
 					>
@@ -87,7 +87,7 @@
 					>
 				</div>
 			</div>
-			<div class="flex flex-col gap-1 items-center border border-black rounded">
+			<div class="flex flex-col gap-1 items-center p-1 border border-black rounded">
 				<h2 class="text-lg font-bold">Reports:</h2>
 				<div class="grid grid-cols-2 gap-1 p-1 text-center">
 					<a href={resolve('/reports/byname/[prefix]', { prefix: curPrefix })} class={bS[pColor]}
@@ -103,6 +103,10 @@
 				<h2 class="text-lg font-bold">Please select a prefix to continue.</h2>
 			</div>
 		{/if}
+		<div class="flex flex-col gap-1 items-center text-center p-1 border border-black rounded">
+            <h2 class="text-lg font-bold">Prefix Independent:</h2>
+            <a href={resolve('/reports/counts')} class="{bS.gray} w-full">Ticket Counts</a>
+		</div>
 	</div>
 
 	{#if adminMode}
