@@ -23,30 +23,36 @@
 </svelte:head>
 
 <div id="app_container" class="p-1">
-    <HeaderBar>
-    	<div>Settings Sections:</div>
-    	{#if data.settings.remote_server}
-    		<a href={resolve('/settings/auth-keys')} class={bS.gray}>Auth Keys</a>
-    	{/if}
-    	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
-    </HeaderBar>
+	<HeaderBar>
+		<div>Settings Sections:</div>
+		{#if data.settings.remote_server}
+			<a href={resolve('/settings/auth-keys')} class={bS.gray}>Auth Keys</a>
+		{/if}
+		<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
+	</HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	<div class="flex flex-col gap-1 w-full py-1">
 		<h2 class="text-lg font-bold">Remote Mode:</h2>
 		<div class="flex flex-row gap-1 items-center">
 			<div>Remote Server:</div>
-			<input type="text" class={iS.normal} bind:value={settings.remote_server} />
+			<input type="text" id="remote_server" class={iS.normal} bind:value={settings.remote_server} />
 		</div>
 		<div class="flex flex-row gap-1 items-center">
 			<div>Remote Port:</div>
-			<input type="text" class={iS.normal} bind:value={settings.remote_port} />
+			<input type="text" id="remote_port" class={iS.normal} bind:value={settings.remote_port} />
 		</div>
 		<div class="flex flex-row gap-1 items-center">
 			<div>Remote TLS:</div>
 			<button
 				class={bS.gray}
 				onclick={() => {
-					settings.remote_tls = !settings.remote_tls;
+					if (settings.remote_tls) {
+						settings.remote_tls = false;
+						settings.remote_port = '8000';
+					} else if (!settings.remote_tls) {
+						settings.remote_tls = true;
+						settings.remote_port = '8443';
+					}
 				}}>{settings.remote_tls ? 'Yes' : 'No'}</button
 			>
 		</div>
@@ -64,7 +70,7 @@
 		</div>
 		<div class="flex flex-row gap-1 items-center">
 			<div>Venue Name:</div>
-			<input type="text" class={iS.normal} bind:value={settings.venue_name} />
+			<input type="text" id="venue_name" class={iS.normal} bind:value={settings.venue_name} />
 		</div>
 		<div class="flex flex-row gap-1 items-center">
 			<button
@@ -87,7 +93,12 @@
 					}
 				}}>Save</button
 			>
-			<button class={bS.gray}>Cancel</button>
+			<button
+				class={bS.gray}
+				onclick={() => {
+					settings = { ...data.settings };
+				}}>Cancel</button
+			>
 		</div>
 		<div>
 			<p class={tS[status.color]}>{status.message}</p>

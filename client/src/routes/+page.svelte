@@ -1,5 +1,5 @@
 <script>
-    import favicon from '$lib/assets/favicon.svg'
+	import favicon from '$lib/assets/favicon.svg';
 	import { tS, bS, bAS } from '$lib/client/styles.js';
 	import { browser } from '$app/environment';
 	import { resolve } from '$app/paths';
@@ -49,15 +49,15 @@
 </svelte:head>
 
 <div class="p-1" id="app_container">
-    <div class="flex flex-row gap-1 items-center">
-        <div>
-            <img src={favicon} alt="TAM Logo" style="height: 4rem">
-        </div>
-        <div>
-           	<h1 class="text-xl font-bold">{pageTitle}</h1>
-           	<p class="text-lg italic">{data.venueName}</p>
-        </div>
-    </div>
+	<div class="flex flex-row gap-1 items-center">
+		<div>
+			<img src={favicon} alt="TAM Logo" style="height: 4rem" />
+		</div>
+		<div>
+			<h1 class="text-xl font-bold">{pageTitle}</h1>
+			<p class="text-lg italic">{data.venueName}</p>
+		</div>
+	</div>
 
 	<div class="flex flex-col md:flex-row md:flex-wrap gap-1 py-1">
 		<div id="prefixes" class="flex flex-col gap-1 p-2 border border-black rounded">
@@ -104,8 +104,9 @@
 			</div>
 		{/if}
 		<div class="flex flex-col gap-1 items-center text-center p-1 border border-black rounded">
-            <h2 class="text-lg font-bold">Prefix Independent:</h2>
-            <a href={resolve('/reports/counts')} class="{bS.gray} w-full">Ticket Counts</a>
+			<h2 class="text-lg font-bold">Prefix Independent:</h2>
+			<a href={resolve('/reports/counts')} class="{bS.gray} w-full">Ticket Counts</a>
+			<a href={resolve('/sheets')} class="{bS.gray} w-full">Print Sheets</a>
 		</div>
 	</div>
 
@@ -114,6 +115,7 @@
 			<h2 class="text-lg font-bold">Admin Mode:</h2>
 			<div class="flex flex-row gap-1">
 				<a href={resolve('/settings')} class={bS.gray}>Settings</a>
+				<a href={resolve('/search/tickets')} class={bS.gray}>Search Tickets</a>
 			</div>
 		</div>
 	{/if}
@@ -132,7 +134,12 @@
 		{/if}
 		<div class="text-center text-xs">
 			<p>&copy; 2026 Ticket Auction Manager</p>
-			<p>Created by Dilan Gilluly. Support me on <a href="https://ko-fi.com/techguydilan" class="text-blue-500">Ko-Fi</a>.</p>
+			<p>
+				Created by Dilan Gilluly. Support me on <a
+					href="https://ko-fi.com/techguydilan"
+					class="text-blue-500">Ko-Fi</a
+				>.
+			</p>
 		</div>
 	</div>
 </div>

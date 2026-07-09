@@ -76,12 +76,13 @@ export const reportByBasket = sqliteView('report_by_basket', {
   ORDER BY b.prefix, b.b_id`);
 
 export const reportCounts = sqliteView('report_counts', {
-  prefix: text('prefix'),
-  unique_buyers: integer('unique_buyers'),
-  total_buys: integer('total_buys')
-}).as(sql`SELECT prefix, COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))) AS unique_buyers, COUNT(*) AS total_buys
+	prefix: text('prefix'),
+	unique_buyers: integer('unique_buyers'),
+	total_buys: integer('total_buys')
+})
+	.as(sql`SELECT prefix, COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))) AS unique_buyers, COUNT(*) AS total_buys
   FROM tickets
   GROUP BY prefix
   UNION ALL
   SELECT 'Total', COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))), COUNT(*)
-  FROM tickets`)
+  FROM tickets`);

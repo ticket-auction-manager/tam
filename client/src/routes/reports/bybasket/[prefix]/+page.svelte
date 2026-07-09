@@ -36,8 +36,7 @@
 					{#each data.prefixes as p (p.prefix)}
 						<a
 							href={resolve('/reports/byname/[prefix]', { prefix: p.prefix })}
-							class={p.prefix == prefix.prefix ? bAS[p.color] : bS[p.color]}
-							>{p.prefix}</a
+							class={p.prefix == prefix.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
 						>
 					{/each}
 				</HeaderBar>
@@ -85,7 +84,7 @@
 	</thead>
 	<tbody class="text-sm">
 		{#each reportLines as line, idx (idx)}
-			<tr>
+			<tr class="break-inside-avoid">
 				<td class="p-0.5 border">{line.b_id}</td>
 				<td class="p-0.5 border">{line.description || ''}</td>
 				<td class="p-0.5 border">{line.winning_ticket}</td>

@@ -1,12 +1,12 @@
 export const tS = {
-  gray: 'text-gray-700 font-bold',
-  white: 'font-bold',
-  blue: 'text-blue-700 font-bold',
-	yellow: 'text-yellow-600 font-bold',
-	green: 'text-green-700 font-bold',
-	orange: 'text-orange-700 font-bold',
-	purple: 'text-purple-700 font-bold',
-	red: 'text-red-700 font-bold'
+	gray: 'text-gray-700',
+	white: 'text-black',
+	blue: 'text-blue-700',
+	yellow: 'text-yellow-600',
+	green: 'text-green-700',
+	orange: 'text-orange-700',
+	purple: 'text-purple-700',
+	red: 'text-red-700'
 };
 
 export const bS = {

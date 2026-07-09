@@ -1,15 +1,14 @@
 <script>
-	import { resolve } from '$app/paths';
 	import { browser } from '$app/environment';
-	import { bS, bAS, iS, rBS } from '$lib/client/styles';
+	import { bS, iS, rBS, tS } from '$lib/client/styles';
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
-	import PagerBar from '$lib/client/components/PagerBar.svelte';
 	import CommandBar from '$lib/client/components/CommandBar.svelte';
+	import TicketSearchBar from '$lib/client/components/TicketSearchBar.svelte';
 
 	let { data } = $props();
 	let { prefix, prefixes } = $derived(data);
 
-	let pageTitle = $derived(`${prefix.prefix} Tickets | TAM`);
+	let pageTitle = 'Ticket Search | TAM';
 
 	let curIdx = $state(0),
 		nextIdx = $derived(curIdx + 1),
@@ -25,28 +24,28 @@
 		}
 	};
 
-	let pager = $state({ idFrom: 0, idTo: 0 });
+	let colorMap = $derived.by(() => {
+		const mapData = {};
+		[...prefixes].forEach((p) => (mapData[p.prefix] = p.color));
+		return mapData;
+	});
+
+	let searchForm = $state({ first_name: '', last_name: '', phone_number: '' });
 	let items = $state([]);
-	let itemsLength = $derived.by(() => (items.length ? items.length : 0));
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
-		getPage: async () => {
-			functions.save();
-			if (pager.idFrom > pager.idTo) {
-				[pager.idFrom, pager.idTo] = [pager.idTo, pager.idFrom];
+		search: async () => {
+			const searchParams = new URLSearchParams({ ...searchForm });
+			const res = await fetch(`/api/search/tickets?${searchParams.toString()}`);
+			if (res.ok) {
+				const resData = await res.json();
+				items = [...resData];
+				setTimeout(() => focusIdx(0), 1);
 			}
-			if (pager.idTo - pager.idFrom > 300) {
-				pager.idTo = pager.idFrom + 300;
-			}
-			const res = await fetch(`/api/tickets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
-			const resData = await res.json();
-			resData.map((i) => (i.changed = false));
-			items = [...resData];
-			setTimeout(() => focusIdx(0));
 		},
 		save: async () => {
 			if (itemsBuffer.length > 0) {
-				const res = await fetch('/api/tickets', {
+				const res = await fetch('/api/search/tickets', {
 					method: 'POST',
 					headers: { 'Content-Type': 'application/json' },
 					body: JSON.stringify(itemsBuffer)
@@ -60,14 +59,6 @@
 			setTimeout(() => {
 				focusIdx(0);
 			}, 1);
-		},
-		prevPage: () => {
-			((pager.idFrom -= itemsLength), (pager.idTo -= itemsLength));
-			functions.getPage();
-		},
-		nextPage: () => {
-			((pager.idFrom += itemsLength), (pager.idTo += itemsLength));
-			functions.getPage();
 		},
 		nextLine: () => {
 			if (items[nextIdx]) {
@@ -127,7 +118,15 @@
 			setTimeout(() => focusIdx(curIdx), 1);
 		}
 	};
-	const headers = ['Ticket ID', 'First Name', 'Last Name', 'Phone Number', 'Pref', 'Save?'];
+	const headers = [
+		'Prefix',
+		'Ticket ID',
+		'First Name',
+		'Last Name',
+		'Phone Number',
+		'Pref',
+		'Save?'
+	];
 
 	if (browser) {
 		window.addEventListener('beforeunload', (e) => {
@@ -144,17 +143,9 @@
 	<thead class="sticky top-1 bg-white">
 		<tr>
 			<td colspan="50">
-				<HeaderBar>
-					<div>Tickets:</div>
-					{#each prefixes as p (p.prefix)}
-						<a
-							href={resolve('/tickets/[prefix]', { prefix: p.prefix })}
-							class={prefix.prefix == p.prefix ? bAS[p.color] : bS[p.color]}>{p.prefix}</a
-						>
-					{/each}
-				</HeaderBar>
+				<HeaderBar></HeaderBar>
 				<h1 class="text-xl font-bold p-1">{pageTitle}</h1>
-				<PagerBar {prefix} {functions} bind:pager />
+				<TicketSearchBar {prefix} {functions} bind:searchForm />
 				<CommandBar {prefix} {functions} /></td
 			>
 		</tr>
@@ -167,12 +158,13 @@
 	<tbody>
 		{#each items as item, idx (item.t_id)}
 			<tr
-				class="focus-within:font-bold {rBS[prefix.color]}"
+				class="{tS[colorMap[item.prefix]]} focus-within:font-bold {rBS[prefix.color]}"
 				onfocusin={(e) => {
 					changeIdx(idx);
 					e.target.scrollIntoView({ block: 'center' });
 				}}
 			>
+				<td class="p-0.5 border">{item.prefix}</td>
 				<td class="p-0.5 border">{item.t_id}</td>
 				<td class="p-0.5 border"
 					><input

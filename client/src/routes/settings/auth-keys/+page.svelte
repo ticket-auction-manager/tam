@@ -14,6 +14,21 @@
 	let authKeys = $state([]);
 	let newDesc = $state('');
 	let curKey = $state('');
+
+	async function getKeys() {
+		const res = await fetch('/api/auth', {
+			headers: { 'TAM-PWD': auth.pwd }
+		});
+		if (res.ok) {
+			auth.toggle = true;
+			const resData = await res.json();
+			authKeys = [...resData];
+			curKey = data.authKey;
+		} else {
+			auth.pwd = 'Invalid Password!';
+			setTimeout(() => (auth.pwd = ''), 3000);
+		}
+	}
 </script>
 
 <svelte:head>
@@ -21,33 +36,17 @@
 </svelte:head>
 
 <div id="app_container" class="p-1">
-    <HeaderBar>
-    	<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
-    	<div>Other Settings:</div>
-    	<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
-    </HeaderBar>
+	<HeaderBar>
+		<a href={resolve('/settings')} class={bS.gray}>Back to Settings</a>
+		<div>Other Settings:</div>
+		<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
+	</HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	{#if !auth.toggle}
 		<div class="flex flex-row gap-1 items-center py-1">
 			<div>Password:</div>
-			<input type="password" class={iS.normal} bind:value={auth.pwd} />
-			<button
-				class={bS.gray}
-				onclick={async () => {
-					const res = await fetch('/api/auth', {
-						headers: { 'TAM-PWD': auth.pwd }
-					});
-					if (res.ok) {
-						auth.toggle = true;
-						const resData = await res.json();
-						authKeys = [...resData];
-						curKey = data.authKey;
-					} else {
-						auth.pwd = 'Invalid Password!';
-						setTimeout(() => (auth.pwd = ''), 3000);
-					}
-				}}>Login</button
-			>
+			<input type="password" id="pwd_input" class={iS.normal} bind:value={auth.pwd} />
+			<button class={bS.gray} onclick={getKeys}>Login</button>
 		</div>
 	{:else}
 		<table class="w-full my-1">
@@ -103,7 +102,9 @@
 				{/each}
 				<tr>
 					<td>New</td>
-					<td><input type="text" class="{iS.normal} w-full" bind:value={newDesc} /></td>
+					<td
+						><input type="text" id="new_desc" class="{iS.normal} w-full" bind:value={newDesc} /></td
+					>
 					<td>
 						<button
 							class={bS.gray}
@@ -116,8 +117,7 @@
 									});
 									if (res.ok) {
 										newDesc = '';
-										const data = await res.json();
-										authKeys = [...authKeys, data];
+										getKeys();
 									}
 								}
 							}}>New Key</button
