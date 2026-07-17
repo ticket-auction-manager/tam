@@ -36,8 +36,12 @@
 			type="number"
 			id="id_from"
 			class={iS.normal}
+			title="Alt + Q"
 			onclick={(e) => {
 				e.target.select();
+			}}
+			onchange={() => {
+			  if (functions.pagerFromUpdate) functions.pagerFromUpdate();
 			}}
 			bind:value={pager.idFrom}
 		/>
@@ -46,6 +50,7 @@
 			type="number"
 			id="id_to"
 			class={iS.normal}
+			title="Alt + W"
 			onclick={(e) => {
 				e.target.select();
 			}}
@@ -62,6 +67,7 @@
 		{#if functions.prevPage}
 			<button
 				class={bS[prefix.color]}
+				title="Alt + B"
 				onclick={() => {
 					functions.prevPage();
 				}}>Prev Page</button
@@ -70,6 +76,7 @@
 		{#if functions.nextPage}
 			<button
 				class={bS[prefix.color]}
+				title="Alt + N"
 				onclick={() => {
 					functions.nextPage();
 				}}>Next Page</button

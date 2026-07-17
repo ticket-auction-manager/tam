@@ -29,6 +29,7 @@
 			<a href={resolve('/settings/auth-keys')} class={bS.gray}>Auth Keys</a>
 		{/if}
 		<a href={resolve('/settings/prefixes')} class={bS.gray}>Prefixes</a>
+		<a href={resolve('/settings/backuprestore')} class={bS.gray}>Backup/Restore</a>
 	</HeaderBar>
 	<h1 class="text-xl font-bold">{pageTitle}</h1>
 	<div class="flex flex-col gap-1 w-full py-1">

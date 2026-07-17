@@ -44,6 +44,13 @@
 			items = [...resData];
 			setTimeout(() => focusIdx(0));
 		},
+		pagerFromUpdate(){
+		  if (itemsLength === 0) {
+				 pager.idTo = pager.idFrom;
+			} else {
+			  pager.idTo = pager.idFrom + (itemsLength - 1);
+			}
+		},
 		save: async () => {
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/tickets', {

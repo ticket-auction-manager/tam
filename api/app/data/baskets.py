@@ -7,8 +7,8 @@ from fastapi import APIRouter, Header
 class Basket:
     prefix: str
     b_id: int
-    description: str = ""
-    donors: str = ""
+    description: str | None = ""
+    donors: str | None = ""
     winning_ticket: int = 0
 
 class BasketRepo(RepoTemplate):

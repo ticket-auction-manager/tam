@@ -43,7 +43,7 @@ export const iS = {
 };
 
 export const rBS = {
-	white: 'even:bg-gray-100',
+	white: 'even:bg-gray-200',
 	blue: 'even:bg-blue-100',
 	yellow: 'even:bg-yellow-100',
 	green: 'even:bg-green-100',
