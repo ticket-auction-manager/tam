@@ -1,7 +1,9 @@
+import os
 from dataclasses import dataclass
+
+import uvicorn
 from db import init_db
 from fastapi import FastAPI, Header
-import os
 from routers import imp_routers
 from system.auth import AuthRepo
 
@@ -29,3 +31,6 @@ def get_main_route(tam_key: str = Header("")):
     return MainRoute(authenticated=AuthRepo().check_key(tam_key))
 
 imp_routers(app)
+
+if __name__ == "__main__":
+  uvicorn.run(app, port=8000)

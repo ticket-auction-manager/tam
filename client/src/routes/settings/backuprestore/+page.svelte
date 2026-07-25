@@ -109,7 +109,9 @@
 				class="{iS.normal} rounded file:bg-gray-300 file:border file:border-black file:px-2 file:py-1 file:rounded"
 				bind:files={uploadFile}
 			/>
-			<button class={bS.gray} onclick={() => fileUpload('local')}>Upload to Local</button>
+			{#if !remoteServer}
+				<button class={bS.gray} onclick={() => fileUpload('local')}>Upload to Local</button>
+			{/if}
 			{#if remoteServer}
 				<button class={bS.gray} onclick={() => fileUpload('remote')}>Upload to Remote</button>
 			{/if}
