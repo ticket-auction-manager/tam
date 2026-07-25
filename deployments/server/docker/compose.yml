@@ -1,0 +1,15 @@
+services:
+  tam-server:
+    build: ../../../api/.
+    image: dbob16/tam-server:latest
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+  tam-rp:
+    build: ../../../rp/.
+    image: dbob16/tam-rp:latest
+    restart: unless-stopped
+    environment:
+      - "TAM_SERVER=tam-server"
+    ports:
+      - "8443:8443"

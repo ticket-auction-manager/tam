@@ -1,0 +1,17 @@
+services:
+  tam-server:
+    image: dbob16/tam-server:${TAM_VERSION}
+    restart: unless-stopped
+    environment:
+      - "TAM_PWD=${TAM_PWD}"
+    volumes:
+      - "./data:/data:Z"
+    ports:
+      - "8000:8000"
+  tam-rp:
+    image: dbob16/tam-rp:${TAM_VERSION}
+    restart: unless-stopped
+    environment:
+      - "TAM_SERVER=tam-server"
+    ports:
+      - "8443:8443"

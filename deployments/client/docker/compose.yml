@@ -1,0 +1,9 @@
+services:
+  tam-client:
+    build: ../../../client/.
+    image: dbob16/tam-client:latest
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"
+    volumes:
+      - "./data:/data:Z"
