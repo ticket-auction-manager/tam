@@ -1,42 +1,25 @@
-# sv
+# Ticket Auction Manager (Client)
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+The contents of this directory of the Ticket Auction Manager repo pertains to just the client side. Which is a web-based client interface, allowing users to use Ticket Auction Manager.
 
-## Creating a project
+Due to dev resources already being in the main repo, I have decided to make this dedicated to users instead of developers.
 
-If you're seeing this, you've probably already done this step. Congrats!
+## Running TAM
 
-```sh
-# create a new project
-npx sv create my-app
-```
+You have some choice when it comes to running TAM, using Docker or through a portable Node environment (coming soon!).
 
-To recreate this project with the same configuration:
+### Docker
 
-```sh
-# recreate this project
-pnpm dlx sv@0.16.1 create --template minimal --no-types --add prettier eslint tailwindcss="plugins:none" sveltekit-adapter="adapter:node" drizzle="database:sqlite+sqlite:better-sqlite3" --install pnpm ./client
-```
+Docker images are available under the dbob16/tam-client repo within Docker Hub. To pull the latest image:
 
-## Developing
+`docker pull dbob16/tam-client:latest`
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Then to run it:
 
-```sh
-npm run dev
+`docker run -d --name tam-client --network host --restart unless-stopped -e host=127.0.0.1 -e port=3000 -v tam-data:/data dbob16/tam-client:latest`
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
-```
+It should then be available in a web browser at `http://localhost:3000` on the computer it is being run on. You can bookmark or make shortcuts to it for user convenience.
 
-## Building
+#### Port Conflict
 
-To create a production version of your app:
-
-```sh
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+If there is a conflict with the port when you go to start TAM, you can change the port by changing the number in the `-e port=3000` to another integer. For instance, if you have to change it to port 3001, you can change it to `-e port=3001` and then navigate to `http://localhost:3001` instead.

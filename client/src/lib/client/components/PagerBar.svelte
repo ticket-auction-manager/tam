@@ -40,7 +40,7 @@
 			onclick={(e) => {
 				e.target.select();
 			}}
-			onchange={() => {
+			oninput={() => {
 			  if (functions.pagerFromUpdate) functions.pagerFromUpdate();
 			}}
 			bind:value={pager.idFrom}

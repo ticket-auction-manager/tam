@@ -34,7 +34,7 @@
 	let items = $state([]);
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
-		search: async () => {
+		async search(){
 			const searchParams = new URLSearchParams({ ...searchForm });
 			const res = await fetch(`/api/search/tickets?${searchParams.toString()}`);
 			if (res.ok) {
@@ -43,7 +43,7 @@
 				setTimeout(() => focusIdx(0), 1);
 			}
 		},
-		save: async () => {
+		async save(){
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/search/tickets', {
 					method: 'POST',
@@ -60,7 +60,7 @@
 				focusIdx(0);
 			}, 1);
 		},
-		nextLine: () => {
+		nextLine(){
 			if (items[nextIdx]) {
 				setTimeout(() => {
 					focusIdx(nextIdx);
@@ -71,7 +71,7 @@
 				}, 1);
 			}
 		},
-		prevLine: () => {
+		prevLine(){
 			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
@@ -82,27 +82,27 @@
 				}, 1);
 			}
 		},
-		dupDown: () => {
+		dupDown(){
 			if (items[nextIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
 				items[nextIdx] = { ...items[nextIdx], ...buffer, changed: true };
-				functions.nextLine();
+				this.nextLine();
 			} else {
 				focusIdx(curIdx);
 			}
 		},
-		dupUp: () => {
+		dupUp(){
 			if (curIdx > 0) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
 				items[prevIdx] = { ...items[prevIdx], ...buffer, changed: true };
-				functions.prevLine();
+				this.prevLine();
 			} else {
 				focusIdx(curIdx);
 			}
 		},
-		copy: () => {
+		copy(){
 			if (items[curIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
@@ -110,7 +110,7 @@
 			}
 			setTimeout(() => focusIdx(curIdx), 1);
 		},
-		paste: () => {
+		paste(){
 			if (items[curIdx]) {
 				const buffer = JSON.parse(window.localStorage.getItem('tam-ticket'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };
@@ -171,7 +171,7 @@
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_first"
-						onchangecapture={() => (item.changed = true)}
+						oninput={() => (item.changed = true)}
 						bind:value={item.first_name}
 					/></td
 				>
@@ -180,7 +180,7 @@
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_second"
-						onchangecapture={() => (item.changed = true)}
+						oninput={() => (item.changed = true)}
 						bind:value={item.last_name}
 					/></td
 				>
@@ -189,7 +189,7 @@
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_third"
-						onchangecapture={() => (item.changed = true)}
+						oninput={() => (item.changed = true)}
 						bind:value={item.phone_number}
 					/></td
 				>

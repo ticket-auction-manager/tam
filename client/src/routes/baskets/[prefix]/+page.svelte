@@ -27,11 +27,11 @@
 
 	let pager = $state({ idFrom: 0, idTo: 0 });
 	let items = $state([]);
-	let itemsLength = $derived.by(() => (items.length ? items.length : 0));
+	let itemsLength = $derived(items.length || 1);
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
-		getPage: async () => {
-			functions.save();
+		async getPage(){
+			this.save();
 			if (pager.idFrom > pager.idTo) {
 				[pager.idFrom, pager.idTo] = [pager.idTo, pager.idFrom];
 			}
@@ -45,13 +45,9 @@
 			setTimeout(() => focusIdx(0));
 		},
 		pagerFromUpdate(){
-		  if (itemsLength === 0) {
-				 pager.idTo = pager.idFrom;
-			} else {
-			  pager.idTo = pager.idFrom + (itemsLength - 1);
-			}
+		  pager.idTo = pager.idFrom + (itemsLength - 1);
 		},
-		save: async () => {
+		async save(){
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/baskets', {
 					method: 'POST',
@@ -68,15 +64,15 @@
 				focusIdx(0);
 			}, 1);
 		},
-		prevPage: () => {
+		prevPage(){
 			((pager.idFrom -= itemsLength), (pager.idTo -= itemsLength));
-			functions.getPage();
+			this.getPage();
 		},
-		nextPage: () => {
+		nextPage(){
 			((pager.idFrom += itemsLength), (pager.idTo += itemsLength));
-			functions.getPage();
+			this.getPage();
 		},
-		nextLine: () => {
+		nextLine(){
 			if (items[nextIdx]) {
 				setTimeout(() => {
 					focusIdx(nextIdx);
@@ -87,7 +83,7 @@
 				}, 1);
 			}
 		},
-		prevLine: () => {
+		prevLine(){
 			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
@@ -98,27 +94,27 @@
 				}, 1);
 			}
 		},
-		dupDown: () => {
+		dupDown(){
 			if (items[nextIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
 				items[nextIdx] = { ...items[nextIdx], ...buffer, changed: true };
-				functions.nextLine();
+				this.nextLine();
 			} else {
 				focusIdx(curIdx);
 			}
 		},
-		dupUp: () => {
+		dupUp(){
 			if (curIdx > 0) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
 				items[prevIdx] = { ...items[prevIdx], ...buffer, changed: true };
-				functions.prevLine();
+				this.prevLine();
 			} else {
 				focusIdx(curIdx);
 			}
 		},
-		copy: () => {
+		copy(){
 			if (items[curIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
@@ -126,7 +122,7 @@
 			}
 			focusIdx(curIdx);
 		},
-		paste: () => {
+		paste(){
 			if (items[curIdx]) {
 				const buffer = JSON.parse(window.localStorage.getItem('tam-basket'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };
@@ -186,7 +182,7 @@
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_first"
-						onchangecapture={() => (item.changed = true)}
+						oninput={() => (item.changed = true)}
 						bind:value={item.description}
 					/></td
 				>
@@ -195,7 +191,7 @@
 						type="text"
 						class="{iS.normal} w-full"
 						id="{idx}_second"
-						onchangecapture={() => (item.changed = true)}
+						oninput={() => (item.changed = true)}
 						bind:value={item.donors}
 					/></td
 				>
