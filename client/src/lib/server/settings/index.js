@@ -7,7 +7,8 @@ const defaultSettings = {
 	remote_port: '8000',
 	remote_tls: false,
 	default_pref: 'CALL',
-	venue_name: 'TAM'
+	venue_name: 'Venue Name',
+	disable_attrib: false
 };
 
 export const getSettings = () => {

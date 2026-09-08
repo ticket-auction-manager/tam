@@ -64,6 +64,12 @@
 				focusIdx(0);
 			}, 1);
 		},
+		cancel(){
+		  if (itemsBuffer.length > 0) {
+				itemsBuffer.forEach((i) => (i.changed = false));
+				this.getPage();
+			};
+		},
 		prevPage(){
 			((pager.idFrom -= itemsLength), (pager.idTo -= itemsLength));
 			this.getPage();
@@ -133,8 +139,8 @@
 	const headers = ['Ticket ID', 'First Name', 'Last Name', 'Phone Number', 'Pref', 'Save?'];
 
 	if (browser) {
-		window.addEventListener('beforeunload', (e) => {
-			if (itemsBuffer.length > 0) e.preventDefault();
+		window.addEventListener('beforeunload', () => {
+			if (itemsBuffer.length > 0) functions.save();
 		});
 	}
 </script>

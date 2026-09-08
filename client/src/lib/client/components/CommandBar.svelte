@@ -78,5 +78,10 @@
 				>Save Marked</button
 			>
 		{/if}
+		{#if functions.cancel}
+  		<button class={bS[prefix.color]} title="Alt + S" onclick={() => functions.cancel()}
+  			>Cancel Marked</button
+  		>
+    {/if}
 	</div>
 </div>

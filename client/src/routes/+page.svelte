@@ -134,12 +134,15 @@
 		{/if}
 		<div class="text-center text-xs">
 			<p>&copy; 2026 Ticket Auction Manager</p>
+			{#if !data.disableAttrib}
 			<p>
-				Created by Dilan Gilluly. Support me on <a
+				Created by Dilan Gilluly. <a
 					href="https://ko-fi.com/techguydilan"
-					class="text-blue-500">Ko-Fi</a
+					class="text-blue-500"
+					target="_blank">My Ko-Fi</a
 				>.
 			</p>
+			{/if}
 		</div>
 	</div>
 </div>

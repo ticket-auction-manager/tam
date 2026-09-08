@@ -74,6 +74,14 @@
 			<input type="text" id="venue_name" class={iS.normal} bind:value={settings.venue_name} />
 		</div>
 		<div class="flex flex-row gap-1 items-center">
+		  <div>Disable Attribution:</div>
+			<button
+			class={bS.gray}
+			onclick={() => {
+			  settings.disable_attrib ? settings.disable_attrib = false : settings.disable_attrib = true
+			}}>{ settings.disable_attrib ? "Yes" : "No" }</button>
+		</div>
+		<div class="flex flex-row gap-1 items-center">
 			<button
 				class={bS.gray}
 				onclick={async () => {

@@ -61,6 +61,12 @@
 				focusIdx(0);
 			}, 1);
 		},
+		cancel(){
+		  if (itemsBuffer.length > 0) {
+				itemsBuffer.forEach((i) => (i.changed = false));
+				this.getPage();
+			};
+		},
 		pagerFromUpdate(){
 		  pager.idTo = pager.idFrom + (itemsLength - 1);
 		},
@@ -133,8 +139,8 @@
 	const headers = ['Basket ID', 'Description', 'Winning Ticket', 'Winner', 'Save?'];
 
 	if (browser) {
-		window.addEventListener('beforeunload', (e) => {
-			if (itemsBuffer.length > 0) e.preventDefault();
+		window.addEventListener('beforeunload', () => {
+			if (itemsBuffer.length > 0) functions.save();
 		});
 	}
 </script>
