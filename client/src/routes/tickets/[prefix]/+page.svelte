@@ -7,7 +7,7 @@
 	import CommandBar from '$lib/client/components/CommandBar.svelte';
 
 	let { data } = $props();
-	let { prefix, prefixes } = $derived(data);
+	let { prefix, prefixes, tamClientID } = $derived(data);
 
 	let pageTitle = $derived(`${prefix.prefix} Tickets | TAM`);
 
@@ -38,7 +38,7 @@
 			if (pager.idTo - pager.idFrom > 300) {
 				pager.idTo = pager.idFrom + 300;
 			}
-			const res = await fetch(`/api/tickets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
+			const res = await fetch(`/api/tickets/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`, {headers: {'TAM-CLIENT-ID': tamClientID}});
 			const resData = await res.json();
 			resData.map((i) => (i.changed = false));
 			items = [...resData];
@@ -51,7 +51,7 @@
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/tickets', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 					body: JSON.stringify(itemsBuffer)
 				});
 				if (res.ok) {

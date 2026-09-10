@@ -1,4 +1,4 @@
-{$TAM_HOSTNAME:tam.lan}:8443 {
+*:8443 {
   tls internal
   reverse_proxy {$TAM_SERVER:localhost}:8000
 }

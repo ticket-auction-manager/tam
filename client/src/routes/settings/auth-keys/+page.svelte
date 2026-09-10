@@ -3,6 +3,7 @@
 	import { resolve } from '$app/paths';
 	import { bS, iS } from '$lib/client/styles';
 	let { data } = $props();
+	let { tamClientID } = $derived(data);
 
 	const pageTitle = 'Auth Keys | TAM';
 
@@ -17,7 +18,7 @@
 
 	async function getKeys() {
 		const res = await fetch('/api/auth', {
-			headers: { 'TAM-PWD': auth.pwd }
+			headers: { 'TAM-PWD': auth.pwd, 'TAM-CLIENT-ID': tamClientID }
 		});
 		if (res.ok) {
 			auth.toggle = true;
@@ -72,7 +73,7 @@
 										onclick={async () => {
 											const res = await fetch('/api/settings', {
 												method: 'POST',
-												headers: { 'Content-Type': 'application/json' },
+												headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 												body: JSON.stringify({ remote_key: key.auth_key })
 											});
 											if (res.ok) {
@@ -86,7 +87,7 @@
 									onclick={async () => {
 										const res = await fetch(`/api/auth?key_to_del=${key.auth_key}`, {
 											method: 'DELETE',
-											headers: { 'TAM-PWD': auth.pwd }
+											headers: { 'TAM-PWD': auth.pwd, 'TAM-CLIENT-ID': tamClientID }
 										});
 										if (res.ok) {
 											setTimeout(() => {
@@ -112,7 +113,7 @@
 								if (newDesc) {
 									const res = await fetch('/api/auth', {
 										method: 'POST',
-										headers: { 'TAM-PWD': auth.pwd, 'Content-Type': 'application/json' },
+										headers: { 'TAM-PWD': auth.pwd, 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 										body: JSON.stringify({ description: newDesc })
 									});
 									if (res.ok) {

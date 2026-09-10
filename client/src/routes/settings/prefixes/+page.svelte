@@ -5,6 +5,7 @@
 	import { resolve } from '$app/paths';
 
 	let { data } = $props();
+	let { tamClientID } = $derived(data);
 
 	const pageTitle = 'Prefixes | TAM';
 
@@ -56,7 +57,7 @@
 					if (editPrefix.prefix) {
 						const req = await fetch('/api/prefixes', {
 							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
+							headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 							body: JSON.stringify([editPrefix])
 						});
 						if (req.ok) window.location.reload();
@@ -125,7 +126,8 @@
 								class={bS[prefix.color]}
 								onclick={async () => {
 									const res = await fetch(`/api/prefixes?p=${prefix.prefix}`, {
-										method: 'DELETE'
+										method: 'DELETE',
+										headers: { 'TAM-CLIENT-ID': tamClientID }
 									});
 									if (res.ok) window.location.reload();
 								}}>Delete</button

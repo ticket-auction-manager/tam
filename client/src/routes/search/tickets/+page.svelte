@@ -6,7 +6,7 @@
 	import TicketSearchBar from '$lib/client/components/TicketSearchBar.svelte';
 
 	let { data } = $props();
-	let { prefix, prefixes } = $derived(data);
+	let { prefix, prefixes, tamClientID } = $derived(data);
 
 	let pageTitle = 'Ticket Search | TAM';
 
@@ -34,20 +34,22 @@
 	let items = $state([]);
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
-		async search(){
+		async search() {
 			const searchParams = new URLSearchParams({ ...searchForm });
-			const res = await fetch(`/api/search/tickets?${searchParams.toString()}`);
+			const res = await fetch(`/api/search/tickets?${searchParams.toString()}`, {
+				headers: { 'TAM-CLIENT-ID': tamClientID }
+			});
 			if (res.ok) {
 				const resData = await res.json();
 				items = [...resData];
 				setTimeout(() => focusIdx(0), 1);
 			}
 		},
-		async save(){
+		async save() {
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/search/tickets', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 					body: JSON.stringify(itemsBuffer)
 				});
 				if (res.ok) {
@@ -60,7 +62,7 @@
 				focusIdx(0);
 			}, 1);
 		},
-		nextLine(){
+		nextLine() {
 			if (items[nextIdx]) {
 				setTimeout(() => {
 					focusIdx(nextIdx);
@@ -71,7 +73,7 @@
 				}, 1);
 			}
 		},
-		prevLine(){
+		prevLine() {
 			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
@@ -82,7 +84,7 @@
 				}, 1);
 			}
 		},
-		dupDown(){
+		dupDown() {
 			if (items[nextIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
@@ -92,7 +94,7 @@
 				focusIdx(curIdx);
 			}
 		},
-		dupUp(){
+		dupUp() {
 			if (curIdx > 0) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
@@ -102,7 +104,7 @@
 				focusIdx(curIdx);
 			}
 		},
-		copy(){
+		copy() {
 			if (items[curIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 't_id'].forEach((key) => delete buffer[key]);
@@ -110,7 +112,7 @@
 			}
 			setTimeout(() => focusIdx(curIdx), 1);
 		},
-		paste(){
+		paste() {
 			if (items[curIdx]) {
 				const buffer = JSON.parse(window.localStorage.getItem('tam-ticket'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };

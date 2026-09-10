@@ -4,7 +4,7 @@
 	import { tS, bS } from '$lib/client/styles';
 
 	let { data } = $props();
-	let prefixes = $derived(data.prefixes);
+	let { prefixes, tamClientID } = $derived(data);
 	let tableData = $state([]);
 	let currentTimeout = $state();
 	let lastRefreshed = $state('');
@@ -12,7 +12,7 @@
 
 	const loadCounts = async () => {
 		const rtnData = {};
-		const res = await fetch('/api/reports/counts');
+		const res = await fetch('/api/reports/counts', {headers: {'TAM-CLIENT-ID': tamClientID}});
 		if (res.ok) {
 			prefixes.forEach((p) => (rtnData[p.prefix] = { ...p }));
 			const resData = await res.json();

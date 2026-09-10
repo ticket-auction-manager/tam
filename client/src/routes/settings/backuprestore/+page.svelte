@@ -6,7 +6,7 @@
 	const pageTitle = 'Backup and Restore | TAM';
 
 	let { data } = $props();
-	let remoteServer = $derived(data.remoteServer);
+	let { remoteServer, tamClientID } = $derived(data);
 	let uploadFile = $state();
 	let contents = $state('');
 	let results = $state('');
@@ -31,7 +31,7 @@
 			hour: String(now.getHours()).padStart(2, '0'),
 			minutes: String(now.getMinutes()).padStart(2, '0')
 		};
-		const res = await fetch(fetch_url);
+		const res = await fetch(fetch_url, { headers: { 'TAM-CLIENT-ID': tamClientID } });
 		if (res.ok) {
 			const data = await res.json();
 			const jsonString = JSON.stringify(data, null, 2);
@@ -58,7 +58,7 @@
 		setTimeout(async () => {
 			const res = await fetch(`/api/backuprestore/${target}`, {
 				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
+				headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 				body: contents
 			});
 			if (res.ok) setResult('File uploaded successfully. Check to see if your data exists.');
@@ -67,7 +67,10 @@
 	}
 
 	async function pushData(target) {
-		const res = await fetch(`/api/backuprestore/push/${target}`, { method: 'HEAD' });
+		const res = await fetch(`/api/backuprestore/push/${target}`, {
+			method: 'HEAD',
+			headers: { 'TAM-CLIENT-ID': tamClientID }
+		});
 		const targetStr = target.charAt(0).toUpperCase() + target.slice(1);
 		if (res.ok) {
 			setResult(`${targetStr} pushed successfully.`);

@@ -7,7 +7,7 @@
 	import CommandBar from '$lib/client/components/CommandBar.svelte';
 
 	let { data } = $props();
-	let { prefix, prefixes } = $derived(data);
+	let { prefix, prefixes, tamClientID } = $derived(data);
 
 	let pageTitle = $derived(`${prefix.prefix} Drawing Form | TAM`);
 
@@ -30,7 +30,7 @@
 	let itemsLength = $derived(items.length || 1);
 	let itemsBuffer = $derived(items.filter((i) => i.changed));
 	const functions = {
-		async getPage(){
+		async getPage() {
 			this.save();
 			if (pager.idFrom > pager.idTo) {
 				[pager.idFrom, pager.idTo] = [pager.idTo, pager.idFrom];
@@ -38,17 +38,19 @@
 			if (pager.idTo - pager.idFrom > 300) {
 				pager.idTo = pager.idFrom + 300;
 			}
-			const res = await fetch(`/api/drawing/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`);
+			const res = await fetch(`/api/drawing/${prefix.prefix}/${pager.idFrom}/${pager.idTo}`, {
+				headers: { 'TAM-CLIENT-ID': tamClientID }
+			});
 			const resData = await res.json();
 			resData.map((i) => (i.changed = false));
 			items = [...resData];
 			setTimeout(() => focusIdx(0));
 		},
-		async save(){
+		async save() {
 			if (itemsBuffer.length > 0) {
 				const res = await fetch('/api/drawing', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
 					body: JSON.stringify(itemsBuffer)
 				});
 				if (res.ok) {
@@ -61,24 +63,24 @@
 				focusIdx(0);
 			}, 1);
 		},
-		cancel(){
-		  if (itemsBuffer.length > 0) {
+		cancel() {
+			if (itemsBuffer.length > 0) {
 				itemsBuffer.forEach((i) => (i.changed = false));
 				this.getPage();
-			};
+			}
 		},
-		pagerFromUpdate(){
-		  pager.idTo = pager.idFrom + (itemsLength - 1);
+		pagerFromUpdate() {
+			pager.idTo = pager.idFrom + (itemsLength - 1);
 		},
-		prevPage(){
+		prevPage() {
 			((pager.idFrom -= itemsLength), (pager.idTo -= itemsLength));
 			this.getPage();
 		},
-		nextPage(){
+		nextPage() {
 			((pager.idFrom += itemsLength), (pager.idTo += itemsLength));
 			this.getPage();
 		},
-		nextLine(){
+		nextLine() {
 			if (items[nextIdx]) {
 				setTimeout(() => {
 					focusIdx(nextIdx);
@@ -89,7 +91,7 @@
 				}, 1);
 			}
 		},
-		prevLine(){
+		prevLine() {
 			if (curIdx > 0) {
 				setTimeout(() => {
 					focusIdx(prevIdx);
@@ -100,7 +102,7 @@
 				}, 1);
 			}
 		},
-		dupDown(){
+		dupDown() {
 			if (items[nextIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
@@ -110,7 +112,7 @@
 				focusIdx(curIdx);
 			}
 		},
-		dupUp(){
+		dupUp() {
 			if (curIdx > 0) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
@@ -120,7 +122,7 @@
 				focusIdx(curIdx);
 			}
 		},
-		copy(){
+		copy() {
 			if (items[curIdx]) {
 				const buffer = { ...items[curIdx] };
 				['prefix', 'b_id'].forEach((key) => delete buffer[key]);
@@ -128,7 +130,7 @@
 			}
 			focusIdx(curIdx);
 		},
-		paste(){
+		paste() {
 			if (items[curIdx]) {
 				const buffer = JSON.parse(window.localStorage.getItem('tam-drawing'));
 				items[curIdx] = { ...items[curIdx], ...buffer, changed: true };
@@ -191,7 +193,9 @@
 						id="{idx}_first"
 						oninput={async () => {
 							item.changed = true;
-							const res = await fetch(`/api/tickets/${prefix.prefix}/${item.winning_ticket}`);
+							const res = await fetch(`/api/tickets/${prefix.prefix}/${item.winning_ticket}`, {
+								headers: { 'TAM-CLIENT-ID': tamClientID }
+							});
 							if (res.ok) {
 								const data = await res.json();
 								[item.last_name, item.first_name, item.phone_number] = [

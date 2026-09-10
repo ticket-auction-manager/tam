@@ -1,9 +1,9 @@
 import { db } from '$lib/server/db';
-import { env } from '$env/dynamic/private';
+import { env } from '$env/dynamic/public';
+import { randomUUID } from 'crypto';
 
 export const init = async () => {
-	env.NODE_TLS_REJECT_UNAUTHORIZED = 0;
-	env.BODY_SIZE_LIMIT = 'Infinity';
+  env.PUBLIC_TAM_CLIENT_ID = randomUUID();
 	await db.run(`CREATE TABLE IF NOT EXISTS baskets (
     prefix text,
     b_id integer,
@@ -42,3 +42,23 @@ export const init = async () => {
     SELECT 'Total', COUNT(DISTINCT(CONCAT(first_name, last_name, phone_number))), COUNT(*)
     FROM tickets`);
 };
+
+export const handle = async ({ event, resolve }) => {
+  if (event.url.pathname.startsWith('/api')) {
+    const clientID = event.request.headers.get('TAM-CLIENT-ID');
+    if (env.PUBLIC_TAM_CLIENT_ID == clientID) {
+      const response = await resolve(event);
+      return response;
+    } else {
+      return new Response(JSON.stringify({detail: "Unauthorized"}), { status: 401 })
+    }
+  } else {
+    const response = await resolve(event);
+    return response;
+  }
+}
+
+export const handleFetch = async ({ request, fetch }) => {
+  request.headers.set('TAM-CLIENT-ID', env.PUBLIC_TAM_CLIENT_ID);
+  return fetch(request);
+}

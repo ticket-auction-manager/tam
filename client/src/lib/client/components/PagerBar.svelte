@@ -43,6 +43,11 @@
 			oninput={() => {
 			  if (functions.pagerFromUpdate) functions.pagerFromUpdate();
 			}}
+			onkeydown={(e) => {
+			  if (e.key == "Enter") {
+					functions.getPage()
+				}
+			}}
 			bind:value={pager.idFrom}
 		/>
 		<div>-</div>
@@ -53,6 +58,11 @@
 			title="Alt + W"
 			onclick={(e) => {
 				e.target.select();
+			}}
+			onkeydown={(e) => {
+			  if (e.key == "Enter") {
+					functions.getPage()
+				}
 			}}
 			bind:value={pager.idTo}
 		/>

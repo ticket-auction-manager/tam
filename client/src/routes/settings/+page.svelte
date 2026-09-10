@@ -5,6 +5,7 @@
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
 
 	let { data } = $props();
+	let { tamClientID } = $derived(data);
 	let settings = $state({});
 	let status = $state({
 		message: '',
@@ -74,12 +75,15 @@
 			<input type="text" id="venue_name" class={iS.normal} bind:value={settings.venue_name} />
 		</div>
 		<div class="flex flex-row gap-1 items-center">
-		  <div>Disable Attribution:</div>
+			<div>Disable Attribution:</div>
 			<button
-			class={bS.gray}
-			onclick={() => {
-			  settings.disable_attrib ? settings.disable_attrib = false : settings.disable_attrib = true
-			}}>{ settings.disable_attrib ? "Yes" : "No" }</button>
+				class={bS.gray}
+				onclick={() => {
+					settings.disable_attrib
+						? (settings.disable_attrib = false)
+						: (settings.disable_attrib = true);
+				}}>{settings.disable_attrib ? 'Yes' : 'No'}</button
+			>
 		</div>
 		<div class="flex flex-row gap-1 items-center">
 			<button
@@ -88,7 +92,7 @@
 					const res = await fetch('/api/settings', {
 						method: 'POST',
 						body: JSON.stringify(settings),
-						headers: { 'Content-Type': 'application/json' }
+						headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID }
 					});
 					if (!res.ok) {
 						status.message = `Error Code: ${res.status}`;

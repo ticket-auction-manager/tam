@@ -1,5 +1,5 @@
 import { env } from '$env/dynamic/private';
-import { readFileSync, writeFileSync, mkdirSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 
 const defaultSettings = {
 	remote_server: '',
@@ -17,7 +17,6 @@ export const getSettings = () => {
 		const settings = JSON.parse(readFileSync(settingsPath, 'utf-8'));
 		return settings;
 	} catch {
-		mkdirSync(env.TAM_DATA_DIR || './data', { recursive: true });
 		writeFileSync(settingsPath, JSON.stringify(defaultSettings, null, 2), 'utf-8');
 		return defaultSettings;
 	}
