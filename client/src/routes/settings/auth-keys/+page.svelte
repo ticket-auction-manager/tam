@@ -1,7 +1,7 @@
 <script>
 	import HeaderBar from '$lib/client/components/HeaderBar.svelte';
 	import { resolve } from '$app/paths';
-	import { bS, iS } from '$lib/client/styles';
+	import { bS, iS, tS } from '$lib/client/styles';
 	let { data } = $props();
 	let { tamClientID } = $derived(data);
 
@@ -15,6 +15,7 @@
 	let authKeys = $state([]);
 	let newDesc = $state('');
 	let curKey = $state('');
+	let errorStatus = $state('');
 
 	async function getKeys() {
 		const res = await fetch('/api/auth', {
@@ -26,8 +27,8 @@
 			authKeys = [...resData];
 			curKey = data.authKey;
 		} else {
-			auth.pwd = 'Invalid Password!';
-			setTimeout(() => (auth.pwd = ''), 3000);
+			errorStatus = 'Invalid Password!';
+			setTimeout(() => (errorStatus = ''), 7000);
 		}
 	}
 </script>
@@ -46,8 +47,21 @@
 	{#if !auth.toggle}
 		<div class="flex flex-row gap-1 items-center py-1">
 			<div>Password:</div>
-			<input type="password" id="pwd_input" class={iS.normal} bind:value={auth.pwd} />
+			<input
+				type="password"
+				id="pwd_input"
+				class={iS.normal}
+				onkeydown={(event) => {
+					if (event.key == 'Enter') {
+						getKeys();
+					}
+				}}
+				bind:value={auth.pwd}
+			/>
 			<button class={bS.gray} onclick={getKeys}>Login</button>
+		</div>
+		<div class="py-1">
+			<p class={tS.red}>{errorStatus}</p>
 		</div>
 	{:else}
 		<table class="w-full my-1">
@@ -73,7 +87,10 @@
 										onclick={async () => {
 											const res = await fetch('/api/settings', {
 												method: 'POST',
-												headers: { 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
+												headers: {
+													'Content-Type': 'application/json',
+													'TAM-CLIENT-ID': tamClientID
+												},
 												body: JSON.stringify({ remote_key: key.auth_key })
 											});
 											if (res.ok) {
@@ -113,7 +130,11 @@
 								if (newDesc) {
 									const res = await fetch('/api/auth', {
 										method: 'POST',
-										headers: { 'TAM-PWD': auth.pwd, 'Content-Type': 'application/json', 'TAM-CLIENT-ID': tamClientID },
+										headers: {
+											'TAM-PWD': auth.pwd,
+											'Content-Type': 'application/json',
+											'TAM-CLIENT-ID': tamClientID
+										},
 										body: JSON.stringify({ description: newDesc })
 									});
 									if (res.ok) {

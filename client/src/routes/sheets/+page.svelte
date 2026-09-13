@@ -26,9 +26,12 @@
 	<thead class="sticky top-0">
 		<tr class="print:hidden">
 			<td colspan="50">
-				<HeaderBar>
-					<div>{pageTitle}</div>
-				</HeaderBar>
+				<HeaderBar />
+			</td>
+		</tr>
+		<tr class="print:hidden">
+			<td colspan="50">
+				<h1 class="text-lg font-bold">{pageTitle}</h1>
 			</td>
 		</tr>
 		<tr class="print:hidden">
