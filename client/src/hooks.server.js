@@ -4,6 +4,14 @@ import { randomUUID } from 'crypto';
 
 export const init = async () => {
   env.PUBLIC_TAM_CLIENT_ID = randomUUID();
+  const originalEmitWarning = process.emitWarning;
+  process.emitWarning = (warning, ...args) => {
+    if (typeof warning === 'string' && warning.includes('NODE_TLS_REJECT_UNAUTHORIZED')) {
+      return;
+    };
+    originalEmitWarning.call(process, warning, ...args);
+  };
+  process.env["NODE_TLS_REJECT_UNAUTHORIZED"] = 0;
 	await db.run(`CREATE TABLE IF NOT EXISTS baskets (
     prefix text,
     b_id integer,

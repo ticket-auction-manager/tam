@@ -218,10 +218,10 @@
 							item.changed = true;
 						}}
 						onkeydown={(e) => {
-							if (e.key == 't') {
+							if (e.key == 't' || e.key == 'T') {
 								if (item.pref != 'TEXT') item.changed = true;
 								item.pref = 'TEXT';
-							} else if (e.key == 'c') {
+							} else if (e.key == 'c' || e.key == 'C') {
 								if (item.pref != 'CALL') item.changed = true;
 								item.pref = 'CALL';
 							}
