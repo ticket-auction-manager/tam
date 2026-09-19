@@ -40,7 +40,7 @@
 	}
 </script>
 
-<div class="flex flex-row gap-1 py-1 justify-between">
+<div class="flex flex-row justify-between gap-1 py-1">
 	<div class="flex flex-row gap-1">
 		{#if functions.dupDown}
 			<button class={bS[prefix.color]} title="Alt + J" onclick={() => functions.dupDown()}
@@ -79,9 +79,18 @@
 			>
 		{/if}
 		{#if functions.cancel}
-  		<button class={bS[prefix.color]} title="Alt + S" onclick={() => functions.cancel()}
-  			>Cancel Marked</button
-  		>
-    {/if}
+			<button
+				class={bS[prefix.color]}
+				title="Alt + S"
+				onclick={() => {
+					const yes_no = confirm(
+						'This will cancel all pending changes. Are you sure you want to cancel?'
+					);
+					if (yes_no) {
+						functions.cancel();
+					}
+				}}>Cancel Marked</button
+			>
+		{/if}
 	</div>
 </div>
