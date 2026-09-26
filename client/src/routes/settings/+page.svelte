@@ -89,6 +89,12 @@
 			<button
 				class={bS.gray}
 				onclick={async () => {
+					const host = (settings.remote_server || '').trim();
+					if (/[\s\/?#@]|:\/\//.test(host)) {
+						status.message = "Enter the server's host name or address only, without http:// or a path.";
+						status.color = 'red';
+						return;
+					}
 					const res = await fetch('/api/settings', {
 						method: 'POST',
 						body: JSON.stringify(settings),
