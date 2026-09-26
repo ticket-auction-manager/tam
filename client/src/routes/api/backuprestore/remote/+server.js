@@ -7,7 +7,7 @@ export const GET = async () => {
 		const connStr = getPath(s);
 		try {
 			const res = await fetch(`${connStr}/api/backuprestore`, {
-				headers: { TAM_KEY: s.remote_key }
+				headers: { 'TAM-KEY': s.remote_key }
 			});
 			if (!res.ok) throw error(res.status);
 			const data = await res.json();
