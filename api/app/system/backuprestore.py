@@ -31,7 +31,7 @@ def post_backup_file(bf: BackupFile, tam_key: str = Header("")):
   for i in range(0, len(bf.prefixes), chunk_size):
     PrefixRepo().post_prefixes(bf.prefixes[i:i+chunk_size])
   for i in range(0, len(bf.baskets), chunk_size):
-    BasketRepo().post_baskets(bf.baskets[i:i+chunk_size])
+    BasketRepo().restore_baskets(bf.baskets[i:i+chunk_size])
   for i in range(0, len(bf.tickets), chunk_size):
     TicketRepo().post_tickets(bf.tickets[i:i+chunk_size])
   return ReturnMessage(message="Backup file imported successfully.")
