@@ -2,20 +2,25 @@ from dataclasses import dataclass
 from db import RepoTemplate
 from fastapi import APIRouter, Header, HTTPException, status
 import os
-import random
+import secrets
 import string
 
-tam_pwd = os.getenv("TAM_PWD", "dbob16")
+rdm_str_choice = string.ascii_uppercase + string.digits
+tam_pwd = os.getenv("TAM_PWD", "")
+if not tam_pwd:
+    # No baked-in password: a run without TAM_PWD gets a fresh one, printed
+    # once so the operator can pair laptops and manage keys.
+    tam_pwd = "".join(secrets.choice(rdm_str_choice) for _ in range(12))
+    print(f"TAM_PWD is not set; the password for this run is {tam_pwd}", flush=True)
 ex_pwd = HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid Password")
 ex_key = HTTPException(status.HTTP_401_UNAUTHORIZED, "Invalid Key")
-rdm_str_choice = string.ascii_uppercase + string.digits
 
 def check_pw(in_pw: str):
     if tam_pwd != in_pw:
         raise ex_pwd
 
 def gen_key():
-    return "".join(random.choice(rdm_str_choice) for _ in range(32))
+    return "".join(secrets.choice(rdm_str_choice) for _ in range(32))
 
 @dataclass
 class AuthReq:
