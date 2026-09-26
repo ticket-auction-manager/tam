@@ -203,6 +203,8 @@
 									data.first_name || '',
 									data.phone_number || ''
 								];
+							} else {
+								[item.last_name, item.first_name, item.phone_number] = ['', '', ''];
 							}
 						}}
 						bind:value={item.winning_ticket}
