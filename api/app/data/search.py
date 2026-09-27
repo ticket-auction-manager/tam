@@ -6,11 +6,14 @@ from system.auth import AuthRepo
 chunk_size = 300
 
 def wild_enc(str_in: str):
-    return f"%{str_in}%"
+    """A LIKE pattern that matches the text literally: the wildcard
+    characters a user may type are escaped (see ESCAPE in the query)."""
+    esc = str_in.replace("\\", "\\\\").replace("%", "\\%").replace("_", "\\_")
+    return f"%{esc}%"
 
 class SearchRepo(RepoTemplate):
     def ticket_search(self, first_name: str, last_name: str, phone_number: str):
-        self.cur.execute("SELECT * FROM tickets WHERE first_name LIKE ? AND last_name LIKE ? AND phone_number LIKE ? ORDER BY prefix, t_id", (wild_enc(first_name), wild_enc(last_name), wild_enc(phone_number)))
+        self.cur.execute("SELECT * FROM tickets WHERE first_name LIKE ? ESCAPE '\\' AND last_name LIKE ? ESCAPE '\\' AND phone_number LIKE ? ESCAPE '\\' ORDER BY prefix, t_id", (wild_enc(first_name), wild_enc(last_name), wild_enc(phone_number)))
         results = self.cur.fetchall()
         return [Ticket(*r) for r in results]
     def post_tickets(self, ts: list[Ticket]):

@@ -6,6 +6,10 @@ import { and, like, sql } from 'drizzle-orm';
 
 const chunk_size = 300;
 
+// A LIKE pattern that matches the text literally: the wildcard characters a
+// user may type are escaped (see ESCAPE in the query).
+const wild = (s) => '%' + s.replace(/[\\%_]/g, (c) => '\\' + c) + '%';
+
 export const GET = async ({ url }) => {
 	const sParams = {
 		first_name: url.searchParams.get('first_name') || '',
@@ -32,9 +36,9 @@ export const GET = async ({ url }) => {
 			.from(tickets)
 			.where(
 				and(
-					like(tickets.first_name, `%${sParams.first_name}%`),
-					like(tickets.last_name, `%${sParams.last_name}%`),
-					like(tickets.phone_number, `%${sParams.phone_number}%`)
+					sql`${tickets.first_name} LIKE ${wild(sParams.first_name)} ESCAPE '\\'`,
+					sql`${tickets.last_name} LIKE ${wild(sParams.last_name)} ESCAPE '\\'`,
+					sql`${tickets.phone_number} LIKE ${wild(sParams.phone_number)} ESCAPE '\\'`,
 				)
 			)
 			.orderBy(tickets.prefix, tickets.t_id);

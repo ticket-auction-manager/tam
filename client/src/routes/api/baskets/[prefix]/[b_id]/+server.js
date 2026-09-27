@@ -10,7 +10,7 @@ export const GET = async ({ params }) => {
 	if (s.remote_server) {
 		const connStr = getPath(s);
 		try {
-			const res = await fetch(`${connStr}/api/tickets/${prefix}/${b_id}`, {
+			const res = await fetch(`${connStr}/api/baskets/${prefix}/${b_id}`, {
 				headers: { 'TAM-KEY': s.remote_key }
 			});
 			if (!res.ok) throw error(res.status);

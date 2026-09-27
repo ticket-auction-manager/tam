@@ -125,7 +125,7 @@
 							<button
 								class={bS[prefix.color]}
 								onclick={async () => {
-									const res = await fetch(`/api/prefixes?p=${prefix.prefix}`, {
+									const res = await fetch(`/api/prefixes?p=${encodeURIComponent(prefix.prefix)}`, {
 										method: 'DELETE',
 										headers: { 'TAM-CLIENT-ID': tamClientID }
 									});
