@@ -49,7 +49,7 @@ export const POST = async ({ request }) => {
   		await db
   			.insert(tickets)
   			.values(chunk)
-  			.onConflictDoNothing({
+  			.onConflictDoUpdate({
   				target: [tickets.prefix, tickets.t_id],
   				set: {
   					first_name: sql`EXCLUDED.first_name`,

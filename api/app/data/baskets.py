@@ -36,6 +36,15 @@ class BasketRepo(RepoTemplate):
                 (b.prefix, b.b_id, b.description, b.donors, b.winning_ticket))
         self.conn.commit()
         return bs
+    def restore_baskets(self, bs: list[Basket]):
+        """Like post_baskets, but a backup file carries the winning tickets
+        too, so a restore writes them instead of leaving the old ones."""
+        for b in bs:
+            self.cur.execute("""INSERT INTO baskets VALUES (?, ?, ?, ?, ?) ON CONFLICT (prefix, b_id) DO UPDATE SET
+                description = EXCLUDED.description, donors = EXCLUDED.donors, winning_ticket = EXCLUDED.winning_ticket""",
+                (b.prefix, b.b_id, b.description, b.donors, b.winning_ticket))
+        self.conn.commit()
+        return bs
 
 basket_router = APIRouter(prefix="/api/baskets")
 
